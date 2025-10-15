@@ -5,6 +5,7 @@ import com.imobly.imobly.controllers.property.mappers.PropertyWebMapper
 import com.imobly.imobly.services.PropertyService
 import jakarta.validation.Valid
 import jakarta.validation.constraints.NotNull
+import jakarta.validation.constraints.Size
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -38,10 +39,14 @@ class PropertyController(
     @PostMapping("/inserir")
     fun insert(
         @Valid @RequestPart(value = "property") property: PropertyDTO,
-        @Valid @NotNull(message = "A imagem deve ser enviada.") @RequestPart(value = "files") files: List<MultipartFile>
+        @Valid
+        @NotNull(message = "A imagem deve ser enviada.")
+        @Size(min = 3, max = 20, message = "Deve conter entre 3 e 20 imagens")
+        @RequestPart(value = "files")
+        files: List<MultipartFile>?
     ): ResponseEntity<PropertyDTO> {
         return ResponseEntity.status(HttpStatus.CREATED).body(
-            mapper.toDTO(service.insert(mapper.toDomain(property), files))
+            mapper.toDTO(service.insert(mapper.toDomain(property), files!!))
         )
     }
 
@@ -49,7 +54,10 @@ class PropertyController(
     fun update(
         @PathVariable id: String,
         @Valid @RequestPart(value = "property") property: PropertyDTO,
-        @Valid @NotNull(message = "A imagem deve ser enviada.") @RequestPart(value = "files") files: List<MultipartFile>
+        @Valid
+        @Size(min = 3, max = 20, message = "Deve conter entre 3 e 20 imagens")
+        @RequestPart(value = "files")
+        files: List<MultipartFile>?
     ): ResponseEntity<PropertyDTO> {
         return ResponseEntity.ok().body(
             mapper.toDTO(service.update(id, mapper.toDomain(property), files))
