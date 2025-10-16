@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Size
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -38,8 +39,8 @@ class PropertyController(
 
     @PostMapping("/inserir")
     fun insert(
-        @Valid @RequestPart(value = "property") property: PropertyDTO,
-        @Valid
+        @Validated @RequestPart(value = "property") property: PropertyDTO,
+        @Validated
         @NotNull(message = "A imagem deve ser enviada.")
         @Size(min = 3, max = 20, message = "Deve conter entre 3 e 20 imagens")
         @RequestPart(value = "files")
@@ -53,10 +54,10 @@ class PropertyController(
     @PutMapping("/atualizar/{id}")
     fun update(
         @PathVariable id: String,
-        @Valid @RequestPart(value = "property") property: PropertyDTO,
-        @Valid
+        @Validated @RequestPart(value = "property") property: PropertyDTO,
+        @Validated
         @Size(min = 3, max = 20, message = "Deve conter entre 3 e 20 imagens")
-        @RequestPart(value = "files")
+        @RequestPart(value = "files", required = false)
         files: List<MultipartFile>?
     ): ResponseEntity<PropertyDTO> {
         return ResponseEntity.ok().body(
