@@ -14,17 +14,23 @@ import java.util.Locale.getDefault
 @Service
 class UploadService(val amazonS3Client: AmazonS3) {
 
+    val supportedMediaTypes = listOf(".jpg", ".jpeg", ".png", ".webp")
+    val bucketName = "my-personal-bucket-jvm"
+
     fun uploadObject(objectFile: MultipartFile): String {
         val extension: String = getExtension(objectFile)
 
-        if ((extension != ".jpg") && (extension != ".png") && (extension != ".webp")) {
+        if (!supportedMediaTypes.contains(extension))
             throw UnsupportedMediaTypeException(RuntimeErrorEnum.ERR0004)
-        }
 
         val fileName: String = getName(extension)
-        val bucketName = "my-personal-bucket-jvm"
         try {
-            amazonS3Client.putObject(bucketName, fileName, objectFile.inputStream, getMetadata(objectFile))
+            amazonS3Client.putObject(
+                bucketName,
+                fileName,
+                objectFile.inputStream,
+                getMetadata(objectFile)
+            )
         } catch (e: IOException) {
             throw InternalErrorException(RuntimeErrorEnum.ERR0003)
         }
@@ -38,16 +44,13 @@ class UploadService(val amazonS3Client: AmazonS3) {
         return metadata
     }
 
-    private fun getName(extension: String): String {
-        return UUID.randomUUID().toString() + extension
-    }
+    private fun getName(extension: String): String = UUID.randomUUID().toString() + extension
 
     private fun getExtension(objectFile: MultipartFile): String {
-        var extension = ""
-        if (objectFile.originalFilename != null) {
-            extension = objectFile.originalFilename!!.substring(objectFile.originalFilename!!.lastIndexOf("."))
-                .lowercase(getDefault());
-        }
-        return extension
+        if (objectFile.originalFilename != null)
+            return objectFile.originalFilename!!
+                .substring(objectFile.originalFilename!!.lastIndexOf("."))
+                .lowercase(getDefault())
+        else throw UnsupportedMediaTypeException(RuntimeErrorEnum.ERR0008)
     }
 }

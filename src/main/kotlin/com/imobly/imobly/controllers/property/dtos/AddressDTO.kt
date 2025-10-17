@@ -1,11 +1,12 @@
 package com.imobly.imobly.controllers.property.dtos
 
 import jakarta.validation.constraints.NotNull
+import jakarta.validation.constraints.Pattern
 import jakarta.validation.constraints.Size
 
 data class AddressDTO (
     @field:NotNull(message = "O campo CEP é obrigatório")
-    @field:Size(min = 8, max = 9, message = "O campo CEP deve estar entre 8  e 9")
+    @field:Pattern(regexp = "\\d{5}-\\d{3}", message = "O formato do CEP está inválido")
     val cep: String?,
 
     @field:NotNull(message = "O campo estado é obrigatório")
@@ -28,7 +29,7 @@ data class AddressDTO (
     @field:Size(min = 1, max = 5, message = "O campo número deve estar entre 1  e 99 999")
     val number: String?,
 
-    @field:Size(min = 0, max = 20, message = "O campo complemento deve ter entre 1  e 20 caracteres")
+    @field:Size(min = 0, max = 20, message = "O campo complemento deve ter entre 0  e 20 caracteres")
     val complement: String?
 ) {
     constructor(): this(null, null, null, null, null, null, null)

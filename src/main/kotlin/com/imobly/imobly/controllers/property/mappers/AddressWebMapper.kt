@@ -5,10 +5,9 @@ import com.imobly.imobly.domains.AddressDomain
 import org.springframework.stereotype.Component
 
 @Component
-
 class AddressWebMapper {
-    fun toDomain(address: AddressDTO): AddressDomain {
-        return AddressDomain(
+    fun toDomain(address: AddressDTO): AddressDomain =
+        AddressDomain(
             cep = address.cep ?: "",
             state = address.state ?: "",
             city = address.city ?: "",
@@ -17,9 +16,9 @@ class AddressWebMapper {
             number = address.number ?: "",
             complement = address.complement ?: ""
         )
-    }
-    fun toDTO(address: AddressDomain): AddressDTO {
-        return AddressDTO(
+
+    fun toDTO(address: AddressDomain): AddressDTO =
+        AddressDTO(
             cep = address.cep,
             state = address.state,
             city = address.city,
@@ -28,5 +27,4 @@ class AddressWebMapper {
             number = address.number,
             complement = address.complement
         )
-    }
 }

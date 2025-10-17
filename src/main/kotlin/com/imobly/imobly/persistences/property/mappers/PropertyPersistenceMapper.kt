@@ -8,14 +8,13 @@ import org.springframework.stereotype.Component
 class PropertyPersistenceMapper(
     val addressMapper: AddressPersistenceMapper
 ) {
-    fun toDomains(properties: List<PropertyEntity>): List<PropertyDomain> {
-        return properties.map {
+    fun toDomains(properties: List<PropertyEntity>): List<PropertyDomain> =
+        properties.map {
             toDomain(it)
         }
-    }
 
-    fun toEntity(property: PropertyDomain): PropertyEntity {
-        return PropertyEntity(
+    fun toEntity(property: PropertyDomain): PropertyEntity =
+        PropertyEntity(
             id = property.id,
             title = property.title,
             pathImages = property.pathImages,
@@ -27,10 +26,9 @@ class PropertyPersistenceMapper(
             garageSpaces = property.garageSpaces,
             address = addressMapper.toEntity(property.address)
         )
-    }
 
-    fun toDomain(property: PropertyEntity): PropertyDomain {
-        return PropertyDomain(
+    fun toDomain(property: PropertyEntity): PropertyDomain =
+        PropertyDomain(
             id = property.id,
             title = property.title,
             pathImages = property.pathImages,
@@ -42,5 +40,4 @@ class PropertyPersistenceMapper(
             garageSpaces = property.garageSpaces,
             address = addressMapper.toDomain(property.address)
         )
-    }
 }

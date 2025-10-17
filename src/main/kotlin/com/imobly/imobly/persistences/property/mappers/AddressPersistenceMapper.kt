@@ -7,8 +7,8 @@ import org.springframework.stereotype.Component
 @Component
 class AddressPersistenceMapper {
 
-    fun toDomain(address: AddressEntity): AddressDomain {
-        return AddressDomain(
+    fun toDomain(address: AddressEntity): AddressDomain =
+        AddressDomain(
             id = address.id,
             cep = address.cep,
             state = address.state,
@@ -18,10 +18,9 @@ class AddressPersistenceMapper {
             number = address.number,
             complement = address.complement
         )
-    }
 
-    fun toEntity(address: AddressDomain): AddressEntity {
-        return AddressEntity(
+    fun toEntity(address: AddressDomain): AddressEntity =
+        AddressEntity(
             cep = address.cep,
             state = address.state,
             city = address.city,
@@ -30,5 +29,4 @@ class AddressPersistenceMapper {
             number = address.number,
             complement = address.complement
         )
-    }
 }

@@ -6,12 +6,10 @@ import com.imobly.imobly.controllers.property.dtos.PropertyDTO
 import org.springframework.stereotype.Component
 
 @Component
-class PropertyWebMapper(
-    val addressMapper: AddressWebMapper
-) {
+class PropertyWebMapper(val addressMapper: AddressWebMapper) {
 
-    fun toDomain(property: PropertyDTO): PropertyDomain {
-        return PropertyDomain(
+    fun toDomain(property: PropertyDTO): PropertyDomain =
+        PropertyDomain(
             title = property.title ?: "",
             pathImages = property.pathImages ?: mutableListOf(),
             description = property.description ?: "",
@@ -22,10 +20,9 @@ class PropertyWebMapper(
             garageSpaces = property.garageSpaces ?: 0,
             address = addressMapper.toDomain(property.address ?: AddressDTO())
         )
-    }
 
-    fun toDTO(property: PropertyDomain): PropertyDTO {
-        return PropertyDTO(
+    fun toDTO(property: PropertyDomain): PropertyDTO =
+        PropertyDTO(
             id = property.id,
             title = property.title,
             pathImages = property.pathImages,
@@ -37,12 +34,9 @@ class PropertyWebMapper(
             garageSpaces = property.garageSpaces,
             address = addressMapper.toDTO(property.address)
         )
-    }
 
-    fun toDTOs(properties: List<PropertyDomain>): List<PropertyDTO> {
-        return properties.map {
+    fun toDTOs(properties: List<PropertyDomain>): List<PropertyDTO> =
+        properties.map {
             toDTO(it)
         }
-    }
-
 }

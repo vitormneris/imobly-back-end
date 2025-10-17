@@ -1,50 +1,49 @@
 package com.imobly.imobly.persistences.tenant.mappers
 
 import com.imobly.imobly.domains.TenantDomain
+import com.imobly.imobly.persistences.property.mappers.AddressPersistenceMapper
 import com.imobly.imobly.persistences.tenant.entities.TenantEntity
-
 import org.springframework.stereotype.Component
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 
 @Component
-class TenantPersistenceMapper {
-
-    private val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+class TenantPersistenceMapper(val mapperAddress: AddressPersistenceMapper) {
 
     fun toDomain(tenant: TenantEntity): TenantDomain =
         TenantDomain(
             id = tenant.id,
-            name = tenant.name,
+            firstName = tenant.firstName,
+            lastName = tenant.lastName,
             email = tenant.email,
             password = tenant.password,
             rg = tenant.rg,
             cpf = tenant.cpf,
-            birthDate = tenant.birthDate.format(dateFormatter),
+            birthDate = tenant.birthDate,
             nationality = tenant.nationality,
             maritalStatus = tenant.maritalStatus,
-            telephones = tenant.telephones.split(",").map { it.trim()},
-            pathImage = tenant.pathImage
+            telephones = tenant.telephones,
+            pathImage = tenant.pathImage,
+            address = mapperAddress.toDomain(tenant.address)
         )
 
     fun toEntity(tenant: TenantDomain): TenantEntity =
         TenantEntity(
             id = tenant.id,
-            name = tenant.name,
+            firstName = tenant.firstName,
+            lastName = tenant.lastName,
             email = tenant.email,
             password = tenant.password,
             rg = tenant.rg,
             cpf = tenant.cpf,
-            birthDate = LocalDate.parse(tenant.birthDate, dateFormatter),
+            birthDate = tenant.birthDate,
             nationality = tenant.nationality,
             maritalStatus = tenant.maritalStatus,
-            telephones = tenant.telephones.joinToString(","),
-            pathImage = tenant.pathImage
+            telephones = tenant.telephones,
+            pathImage = tenant.pathImage ?: "",
+            address = mapperAddress.toEntity(tenant.address)
         )
 
-    fun toDomains(tenants: List<TenantEntity>): List<TenantDomain>{
-        return tenants.map{
+    fun toDomains(tenants: List<TenantEntity>): List<TenantDomain> =
+        tenants.map{
             toDomain(it)
         }
-    }
 }

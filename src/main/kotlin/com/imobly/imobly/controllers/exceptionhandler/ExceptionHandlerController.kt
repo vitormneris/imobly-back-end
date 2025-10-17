@@ -2,7 +2,10 @@ package com.imobly.imobly.controllers.exceptionhandler
 
 import com.imobly.imobly.controllers.exceptionhandler.dtos.ErrorFieldDTO
 import com.imobly.imobly.controllers.exceptionhandler.dtos.ErrorMessageDTO
+import com.imobly.imobly.exceptions.DuplicateResourceException
+import com.imobly.imobly.exceptions.InternalErrorException
 import com.imobly.imobly.exceptions.ResourceNotFoundException
+import com.imobly.imobly.exceptions.UnsupportedMediaTypeException
 import com.imobly.imobly.exceptions.enums.RuntimeErrorEnum
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.http.HttpStatus
@@ -17,8 +20,7 @@ class ExceptionHandlerController {
 
     @ExceptionHandler(MethodArgumentNotValidException::class)
     fun methodArgumentNotValid(
-        exception: MethodArgumentNotValidException,
-        request: HttpServletRequest
+        exception: MethodArgumentNotValidException, request: HttpServletRequest
     ): ResponseEntity<ErrorMessageDTO> {
 
         val errors: List<ErrorFieldDTO> = exception.bindingResult.fieldErrors.map {
@@ -44,10 +46,8 @@ class ExceptionHandlerController {
 
     @ExceptionHandler(ResourceNotFoundException::class)
     fun resourceNotFound(
-        exception: ResourceNotFoundException,
-        request: HttpServletRequest
-    ): ResponseEntity<ErrorMessageDTO>
-    {
+        exception: ResourceNotFoundException, request: HttpServletRequest
+    ): ResponseEntity<ErrorMessageDTO> {
         val enum: RuntimeErrorEnum = exception.errorEnum
         val status: HttpStatus = HttpStatus.NOT_FOUND
         val error = ErrorMessageDTO(
@@ -55,7 +55,55 @@ class ExceptionHandlerController {
             status = status.value(),
             message = enum.message,
             timestamp = Instant.now(),
-            path = request.requestURI,
+            path = request.requestURI
+        )
+        return ResponseEntity.status(status).body(error)
+    }
+
+    @ExceptionHandler(DuplicateResourceException::class)
+    fun duplicateResource(
+        exception: DuplicateResourceException, request: HttpServletRequest
+    ): ResponseEntity<ErrorMessageDTO> {
+        val enum: RuntimeErrorEnum = exception.errorEnum
+        val status: HttpStatus = HttpStatus.CONFLICT
+        val error = ErrorMessageDTO(
+            code = enum.code,
+            status = status.value(),
+            message = enum.message,
+            timestamp = Instant.now(),
+            path = request.requestURI
+        )
+        return ResponseEntity.status(status).body(error)
+    }
+
+    @ExceptionHandler(InternalErrorException::class)
+    fun internalError(
+        exception: InternalErrorException, request: HttpServletRequest
+    ): ResponseEntity<ErrorMessageDTO> {
+        val enum: RuntimeErrorEnum = exception.errorEnum
+        val status: HttpStatus = HttpStatus.INTERNAL_SERVER_ERROR
+        val error = ErrorMessageDTO(
+            code = enum.code,
+            status = status.value(),
+            message = enum.message,
+            timestamp = Instant.now(),
+            path = request.requestURI
+        )
+        return ResponseEntity.status(status).body(error)
+    }
+
+    @ExceptionHandler(UnsupportedMediaTypeException::class)
+    fun unsupportedMediaType(
+        exception: UnsupportedMediaTypeException, request: HttpServletRequest
+    ): ResponseEntity<ErrorMessageDTO> {
+        val enum: RuntimeErrorEnum = exception.errorEnum
+        val status: HttpStatus = HttpStatus.UNSUPPORTED_MEDIA_TYPE
+        val error = ErrorMessageDTO(
+            code = enum.code,
+            status = status.value(),
+            message = enum.message,
+            timestamp = Instant.now(),
+            path = request.requestURI
         )
         return ResponseEntity.status(status).body(error)
     }

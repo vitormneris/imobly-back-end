@@ -10,19 +10,15 @@ import org.springframework.web.multipart.MultipartFile
 
 @Service
 class PropertyService(
-    val repository: PropertyRepository,
-    val uploadService: UploadService,
-    val mapper: PropertyPersistenceMapper
+    val repository: PropertyRepository, val uploadService: UploadService, val mapper: PropertyPersistenceMapper
 ) {
-    fun findAll(): List<PropertyDomain> {
-        return mapper.toDomains(repository.findAll())
-    }
+    fun findAll(): List<PropertyDomain> = mapper.toDomains(repository.findAll())
 
-    fun findById(id: String): PropertyDomain {
-        return mapper.toDomain(repository.findById(id).orElseThrow({
+    fun findById(id: String): PropertyDomain =
+        mapper.toDomain(repository.findById(id).orElseThrow({
             throw ResourceNotFoundException(RuntimeErrorEnum.ERR0002)
         }))
-    }
+
 
     fun insert(property: PropertyDomain, files: List<MultipartFile>): PropertyDomain {
         property.pathImages = files.map { uploadService.uploadObject(it) }
