@@ -2,14 +2,14 @@ package com.imobly.imobly.domains
 
 class PropertyDomain(
     var id: String? = null,
-    var title: String,
-    var pathImages: List<String>,
-    var description: String,
-    var rentalValue: Double,
-    var area: Float,
-    var bedrooms: Int,
-    var bathrooms: Int,
-    var garageSpaces: Int,
-    var address: AddressDomain,
-    var category: CategoryDomain
+    var title: String = "",
+    var pathImages: List<String> = emptyList(),
+    var description: String = "",
+    var rentalValue: Double = 0.0,
+    var area: Float = 0.0f,
+    var bedrooms: Int = 0,
+    var bathrooms: Int = 0,
+    var garageSpaces: Int = 0,
+    var address: AddressDomain = AddressDomain(),
+    var category: CategoryDomain = CategoryDomain()
 )

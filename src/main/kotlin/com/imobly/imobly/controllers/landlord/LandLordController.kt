@@ -28,7 +28,7 @@ class LandLordController(val service: LandLordService, val mapper: LandLordWebMa
         ResponseEntity.ok().body(mapper.toDTO(service.findById(id)))
 
     @PostMapping("/inserir")
-    fun insert(@Valid @RequestBody landlord: LandLordDTO, ): ResponseEntity<LandLordDTO> =
+    fun insert(@Valid @RequestBody landlord: LandLordDTO): ResponseEntity<LandLordDTO> =
         ResponseEntity.status(HttpStatus.CREATED).body(
             mapper.toDTO(service.insert(mapper.toDomain(landlord)))
         )

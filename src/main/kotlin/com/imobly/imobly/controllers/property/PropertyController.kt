@@ -28,9 +28,7 @@ class PropertyController(val service: PropertyService, val mapper: PropertyWebMa
 
     @GetMapping("/encontrarporid/{id}")
     fun findById(@PathVariable id: String): ResponseEntity<PropertyDTO> =
-        ResponseEntity.ok().body(mapper.toDTO(
-            service.findById(id), CategoryWebMapper()
-        ))
+        ResponseEntity.ok().body(mapper.toDTO(service.findById(id), CategoryWebMapper()))
 
     @PostMapping("/inserir")
     fun insert(
