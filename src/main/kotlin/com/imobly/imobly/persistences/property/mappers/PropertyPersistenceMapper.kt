@@ -1,19 +1,18 @@
 package com.imobly.imobly.persistences.property.mappers
 
 import com.imobly.imobly.domains.PropertyDomain
+import com.imobly.imobly.persistences.category.mappers.CategoryPersistenceMapper
 import com.imobly.imobly.persistences.property.entities.PropertyEntity
 import org.springframework.stereotype.Component
 
 @Component
-class PropertyPersistenceMapper(
-    val addressMapper: AddressPersistenceMapper
-) {
+class PropertyPersistenceMapper(val addressMapper: AddressPersistenceMapper) {
     fun toDomains(properties: List<PropertyEntity>): List<PropertyDomain> =
         properties.map {
-            toDomain(it)
+            toDomain(it, CategoryPersistenceMapper())
         }
 
-    fun toEntity(property: PropertyDomain): PropertyEntity =
+    fun toEntity(property: PropertyDomain, categoryMapper: CategoryPersistenceMapper): PropertyEntity =
         PropertyEntity(
             id = property.id,
             title = property.title,
@@ -24,10 +23,11 @@ class PropertyPersistenceMapper(
             bathrooms = property.bathrooms,
             bedrooms = property.bedrooms,
             garageSpaces = property.garageSpaces,
-            address = addressMapper.toEntity(property.address)
+            address = addressMapper.toEntity(property.address),
+            category = categoryMapper.toEntity(property.category)
         )
 
-    fun toDomain(property: PropertyEntity): PropertyDomain =
+    fun toDomain(property: PropertyEntity, categoryMapper: CategoryPersistenceMapper): PropertyDomain =
         PropertyDomain(
             id = property.id,
             title = property.title,
@@ -38,6 +38,7 @@ class PropertyPersistenceMapper(
             bathrooms = property.bathrooms,
             bedrooms = property.bedrooms,
             garageSpaces = property.garageSpaces,
-            address = addressMapper.toDomain(property.address)
+            address = addressMapper.toDomain(property.address),
+            category = categoryMapper.toDomainWithoutProperties(property.category)
         )
 }

@@ -1,9 +1,6 @@
 package com.imobly.imobly.exceptions.enums
 
-enum class RuntimeErrorEnum(
-    val code: String,
-    val message: String
-) {
+enum class RuntimeErrorEnum(val code: String, val message: String) {
     ERR0001("INVALID_ARGUMENTS", "Há campos invalidos na solicitação"),
     ERR0002("RESOURCE_NOT_FOUND", "O recurso solicitado não foi encontrado"),
     ERR0003("UPLOAD_OBJECT_ERROR", "Houve um erro inesperado ao fazer o upload da imagem."),
@@ -14,5 +11,9 @@ enum class RuntimeErrorEnum(
     ERR0008("UPLOAD_OBJECT_ERROR", "Não foi possível obter a extensão do arquivo"),
     ERR0009("MULTIPARTFILE_ERROR", "A(s) imagem(ns) é(são) obrigatória(s)"),
     ERR0010("MULTIPARTFILE_ERROR", "O número de imagens deve estar entre 3 e 15"),
-
+    ERR0011("RESOURCE_NOT_FOUND", "A propriedade solicitada não foi encontrado"),
+    ERR0012("RESOURCE_NOT_FOUND", "O locatário solicitado não foi encontrado"),
+    ERR0013("RESOURCE_NOT_FOUND", "O locador solicitado não foi encontrado"),
+    ERR0014("RESOURCE_NOT_FOUND", "A categoria solicitada não foi encontrado"),
+    ERR0015("RESOURCE_NOT_FOUND", "A reportação solicitada não foi encontrado"),
 }

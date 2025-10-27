@@ -7,30 +7,28 @@ import jakarta.validation.constraints.Size
 data class AddressDTO (
     @field:NotNull(message = "O campo CEP é obrigatório")
     @field:Pattern(regexp = "\\d{5}-\\d{3}", message = "O formato do CEP está inválido")
-    val cep: String?,
+    val cep: String? = "",
 
     @field:NotNull(message = "O campo estado é obrigatório")
     @field:Size(min = 2, max = 20, message = "O campo estado deve ter entre 2  e 20 caracteres")
-    val state: String?,
+    val state: String? = "",
 
     @field:NotNull(message = "O campo cidade é obrigatório")
     @field:Size(min = 1, max = 50, message = "O campo cidade deve ter entre 1  e 50 caracteres")
-    val city: String?,
+    val city: String? = "",
 
     @field:NotNull(message = "O campo bairro é obrigatório")
     @field:Size(min = 1, max = 60, message = "O campo bairro deve ter entre 1  e 60 caracteres")
-    val neighborhood: String?,
+    val neighborhood: String? = "",
 
     @field:NotNull(message = "O campo rua é obrigatório")
     @field:Size(min = 1, max = 60, message = "O campo rua deve ter entre 1  e 60 caracteres")
-    val street: String?,
+    val street: String? = "",
 
     @field:NotNull(message = "O campo número é obrigatório")
     @field:Size(min = 1, max = 5, message = "O campo número deve estar entre 1  e 99 999")
-    val number: String?,
+    val number: String? = "",
 
     @field:Size(min = 0, max = 20, message = "O campo complemento deve ter entre 0  e 20 caracteres")
-    val complement: String?
-) {
-    constructor(): this(null, null, null, null, null, null, null)
-}
+    val complement: String? = ""
+)

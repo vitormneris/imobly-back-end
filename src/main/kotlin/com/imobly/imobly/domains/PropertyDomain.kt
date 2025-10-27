@@ -10,5 +10,6 @@ class PropertyDomain(
     var bedrooms: Int,
     var bathrooms: Int,
     var garageSpaces: Int,
-    var address: AddressDomain
+    var address: AddressDomain,
+    var category: CategoryDomain
 )

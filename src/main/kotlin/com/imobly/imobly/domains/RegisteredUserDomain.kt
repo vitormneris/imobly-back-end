@@ -8,5 +8,4 @@ open class RegisteredUserDomain(
     email: String,
     telephones: List<String>,
     var password: String,
-    var address: AddressDomain
 ): UserDomain(id, firstName, lastName, email, telephones)

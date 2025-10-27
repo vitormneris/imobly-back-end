@@ -1,5 +1,6 @@
 package com.imobly.imobly.controllers.property.dtos
 
+import com.imobly.imobly.controllers.category.dtos.CategoryDTO
 import jakarta.validation.Valid
 import jakarta.validation.constraints.Max
 import jakarta.validation.constraints.Min
@@ -42,6 +43,9 @@ data class PropertyDTO (
     val garageSpaces: Int?,
 
     @field:Valid
-    @field:NotNull(message = "O objeto endereço é obrigatório")
-    val address: AddressDTO?
+    @field:NotNull(message = "O endereço é obrigatório")
+    val address: AddressDTO?,
+
+    @field:NotNull(message = "O campo categoria é obrigatório")
+    val category: CategoryDTO
 )

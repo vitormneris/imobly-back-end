@@ -1,11 +1,9 @@
 package com.imobly.imobly.controllers.property
 
+import com.imobly.imobly.controllers.category.mappers.CategoryWebMapper
 import com.imobly.imobly.controllers.property.dtos.PropertyDTO
 import com.imobly.imobly.controllers.property.mappers.PropertyWebMapper
 import com.imobly.imobly.services.PropertyService
-import jakarta.validation.Valid
-import jakarta.validation.constraints.NotNull
-import jakarta.validation.constraints.Size
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated
@@ -30,7 +28,9 @@ class PropertyController(val service: PropertyService, val mapper: PropertyWebMa
 
     @GetMapping("/encontrarporid/{id}")
     fun findById(@PathVariable id: String): ResponseEntity<PropertyDTO> =
-        ResponseEntity.ok().body(mapper.toDTO(service.findById(id)))
+        ResponseEntity.ok().body(mapper.toDTO(
+            service.findById(id), CategoryWebMapper()
+        ))
 
     @PostMapping("/inserir")
     fun insert(
@@ -38,7 +38,10 @@ class PropertyController(val service: PropertyService, val mapper: PropertyWebMa
         @RequestPart(value = "property") property: PropertyDTO,
         @RequestPart(value = "files") files: List<MultipartFile>?
     ): ResponseEntity<PropertyDTO> = ResponseEntity.status(HttpStatus.CREATED).body(
-        mapper.toDTO(service.insert(mapper.toDomain(property), files))
+        mapper.toDTO(
+            service.insert(mapper.toDomain(property, CategoryWebMapper()), files),
+            CategoryWebMapper()
+        )
     )
 
     @PutMapping("/atualizar/{id}")
@@ -47,7 +50,10 @@ class PropertyController(val service: PropertyService, val mapper: PropertyWebMa
         @Validated @RequestPart(value = "property") property: PropertyDTO,
         @RequestPart(value = "files", required = false) files: List<MultipartFile>?
     ): ResponseEntity<PropertyDTO> = ResponseEntity.ok().body(
-        mapper.toDTO(service.update(id, mapper.toDomain(property), files))
+        mapper.toDTO(
+            service.update(id, mapper.toDomain(property, CategoryWebMapper()), files),
+            CategoryWebMapper()
+        )
     )
 
     @DeleteMapping("/deletar/{id}")

@@ -4,48 +4,60 @@ import com.imobly.imobly.exceptions.ResourceNotFoundException
 import com.imobly.imobly.exceptions.enums.RuntimeErrorEnum
 import com.imobly.imobly.domains.PropertyDomain
 import com.imobly.imobly.exceptions.InvalidArgumentsException
+import com.imobly.imobly.persistences.category.mappers.CategoryPersistenceMapper
+import com.imobly.imobly.persistences.category.repositories.CategoryRepository
 import com.imobly.imobly.persistences.property.mappers.PropertyPersistenceMapper
 import com.imobly.imobly.persistences.property.repositories.PropertyRepository
+import jdk.jfr.Category
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 
 @Service
 class PropertyService(
-    val repository: PropertyRepository, val uploadService: UploadService, val mapper: PropertyPersistenceMapper
+    val propertyRepository: PropertyRepository,
+    val categoryRepository: CategoryRepository,
+    val uploadService: UploadService,
+    val mapper: PropertyPersistenceMapper
 ) {
-    fun findAll(): List<PropertyDomain> = mapper.toDomains(repository.findAll())
+    fun findAll(): List<PropertyDomain> = mapper.toDomains(propertyRepository.findAll())
 
     fun findById(id: String): PropertyDomain =
-        mapper.toDomain(repository.findById(id).orElseThrow({
-            throw ResourceNotFoundException(RuntimeErrorEnum.ERR0002)
-        }))
+        mapper.toDomain(propertyRepository.findById(id).orElseThrow({
+            throw ResourceNotFoundException(RuntimeErrorEnum.ERR0011)
+        }), CategoryPersistenceMapper())
 
 
     fun insert(property: PropertyDomain, files: List<MultipartFile>?): PropertyDomain {
         uploadService.checkIfMultipartFileListIsNull(files)
         uploadService.checkIfMultipartFilesListIsInTheInterval(files!!)
+        categoryRepository.findById(property.category.id ?: "").orElseThrow({
+            throw ResourceNotFoundException(RuntimeErrorEnum.ERR0014)
+        })
         property.pathImages = files.map { uploadService.uploadObject(it) }
-        val propertySaved = repository.save(mapper.toEntity(property))
-        return mapper.toDomain(propertySaved)
+        val propertySaved = propertyRepository.save(mapper.toEntity(property, CategoryPersistenceMapper()))
+        return mapper.toDomain(propertySaved, CategoryPersistenceMapper())
     }
 
     fun update(id: String, property: PropertyDomain, files: List<MultipartFile>?): PropertyDomain {
-        property.pathImages = repository.findById(id).orElseThrow({
-            throw ResourceNotFoundException(RuntimeErrorEnum.ERR0002)
+        property.pathImages = propertyRepository.findById(id).orElseThrow({
+            throw ResourceNotFoundException(RuntimeErrorEnum.ERR0011)
         }).pathImages
+        categoryRepository.findById(property.category.id ?: "").orElseThrow({
+            throw ResourceNotFoundException(RuntimeErrorEnum.ERR0014)
+        })
         property.id = id
         if (files != null) {
             uploadService.checkIfMultipartFilesListIsInTheInterval(files)
             property.pathImages = files.map { uploadService.uploadObject(it) }
         }
-        val propertyUpdated = repository.save(mapper.toEntity(property))
-        return mapper.toDomain(propertyUpdated)
+        val propertyUpdated = propertyRepository.save(mapper.toEntity(property, CategoryPersistenceMapper()))
+        return mapper.toDomain(propertyUpdated, CategoryPersistenceMapper())
     }
 
     fun delete(id: String) {
-        repository.findById(id).orElseThrow({
-            throw ResourceNotFoundException(RuntimeErrorEnum.ERR0002)
+        propertyRepository.findById(id).orElseThrow({
+            throw ResourceNotFoundException(RuntimeErrorEnum.ERR0011)
         })
-        repository.deleteById(id)
+        propertyRepository.deleteById(id)
     }
 }

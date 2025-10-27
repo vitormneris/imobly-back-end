@@ -11,6 +11,8 @@ import java.time.LocalDate
 
 @Component
 class TenantWebMapper(val addressMapper: AddressWebMapper) {
+    fun toDomainOnlyId(tenant: TenantDTO): TenantDomain =
+        TenantDomain(id = tenant.id)
 
     fun toDomain(tenant: TenantDTO): TenantDomain =
         TenantDomain(

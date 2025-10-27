@@ -1,5 +1,6 @@
 package com.imobly.imobly.controllers.property.mappers
 
+import com.imobly.imobly.controllers.category.mappers.CategoryWebMapper
 import com.imobly.imobly.controllers.property.dtos.AddressDTO
 import com.imobly.imobly.domains.PropertyDomain
 import com.imobly.imobly.controllers.property.dtos.PropertyDTO
@@ -8,7 +9,7 @@ import org.springframework.stereotype.Component
 @Component
 class PropertyWebMapper(val addressMapper: AddressWebMapper) {
 
-    fun toDomain(property: PropertyDTO): PropertyDomain =
+    fun toDomain(property: PropertyDTO, categoryMapper: CategoryWebMapper): PropertyDomain =
         PropertyDomain(
             title = property.title ?: "",
             pathImages = property.pathImages ?: mutableListOf(),
@@ -18,10 +19,11 @@ class PropertyWebMapper(val addressMapper: AddressWebMapper) {
             bathrooms = property.bathrooms ?: 0,
             bedrooms = property.bedrooms ?: 0,
             garageSpaces = property.garageSpaces ?: 0,
-            address = addressMapper.toDomain(property.address ?: AddressDTO())
+            address = addressMapper.toDomain(property.address ?: AddressDTO()),
+            category = categoryMapper.toDomainOnlyId(property.category)
         )
 
-    fun toDTO(property: PropertyDomain): PropertyDTO =
+    fun toDTO(property: PropertyDomain, categoryMapper: CategoryWebMapper): PropertyDTO =
         PropertyDTO(
             id = property.id,
             title = property.title,
@@ -32,11 +34,12 @@ class PropertyWebMapper(val addressMapper: AddressWebMapper) {
             bathrooms = property.bathrooms,
             bedrooms = property.bedrooms,
             garageSpaces = property.garageSpaces,
-            address = addressMapper.toDTO(property.address)
+            address = addressMapper.toDTO(property.address),
+            category = categoryMapper.toDTO(property.category, PropertyWebMapper(AddressWebMapper()))
         )
 
     fun toDTOs(properties: List<PropertyDomain>): List<PropertyDTO> =
         properties.map {
-            toDTO(it)
+            toDTO(it, CategoryWebMapper())
         }
 }

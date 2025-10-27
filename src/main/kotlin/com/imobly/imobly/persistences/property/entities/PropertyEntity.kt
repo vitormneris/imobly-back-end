@@ -1,5 +1,6 @@
 package com.imobly.imobly.persistences.property.entities
 
+import com.imobly.imobly.persistences.category.entities.CategoryEntity
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -7,6 +8,7 @@ import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
+import jakarta.persistence.ManyToOne
 import jakarta.persistence.OneToOne
 import jakarta.persistence.Table
 
@@ -34,5 +36,8 @@ class PropertyEntity(
     val garageSpaces: Int,
     @OneToOne(cascade = [CascadeType.ALL])
     @JoinColumn(name = "fk_endereco_id", referencedColumnName = "id")
-    val address: AddressEntity
+    val address: AddressEntity,
+    @ManyToOne
+    @JoinColumn(name = "fk_categoria_id", referencedColumnName = "id")
+    val category: CategoryEntity
 )

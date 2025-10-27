@@ -38,7 +38,7 @@ class TenantPersistenceMapper(val mapperAddress: AddressPersistenceMapper) {
             nationality = tenant.nationality,
             maritalStatus = tenant.maritalStatus,
             telephones = tenant.telephones,
-            pathImage = tenant.pathImage ?: "",
+            pathImage = tenant.pathImage,
             address = mapperAddress.toEntity(tenant.address)
         )
 

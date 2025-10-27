@@ -18,7 +18,7 @@ class TenantService(
 
     fun findById(id: String): TenantDomain =
         mapper.toDomain(repository.findById(id).orElseThrow({
-            throw ResourceNotFoundException(RuntimeErrorEnum.ERR0002)
+            throw ResourceNotFoundException(RuntimeErrorEnum.ERR0012)
         }))
 
     fun insert(tenant: TenantDomain, file: MultipartFile?): TenantDomain {
@@ -31,7 +31,7 @@ class TenantService(
 
     fun update(id: String, tenant: TenantDomain, file: MultipartFile?): TenantDomain {
         tenant.pathImage = repository.findById(id).orElseThrow({
-            throw ResourceNotFoundException(RuntimeErrorEnum.ERR0002)
+            throw ResourceNotFoundException(RuntimeErrorEnum.ERR0012)
         }).pathImage
         checkUniqueFields(tenant, id)
         tenant.id = id
@@ -44,7 +44,7 @@ class TenantService(
 
     fun delete(id: String) {
         repository.findById(id).orElseThrow({
-            throw ResourceNotFoundException(RuntimeErrorEnum.ERR0002)
+            throw ResourceNotFoundException(RuntimeErrorEnum.ERR0012)
         })
         repository.deleteById(id)
     }
