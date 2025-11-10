@@ -7,4 +7,6 @@ abstract class UserDomain(
     var lastName: String,
     var email: String,
     var telephones: List<String>
-)
+): Comparable<UserDomain> {
+    override fun compareTo(other: UserDomain): Int = this.firstName.compareTo(other.firstName)
+}

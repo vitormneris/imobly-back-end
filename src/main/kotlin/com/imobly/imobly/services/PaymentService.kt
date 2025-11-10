@@ -9,6 +9,7 @@ import com.imobly.imobly.exceptions.ResourceNotFoundException
 import com.imobly.imobly.exceptions.enums.RuntimeErrorEnum
 import com.imobly.imobly.persistences.payment.mappers.PaymentPersistenceMapper
 import com.imobly.imobly.persistences.payment.repositories.PaymentRepository
+import io.jsonwebtoken.lang.Collections
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit

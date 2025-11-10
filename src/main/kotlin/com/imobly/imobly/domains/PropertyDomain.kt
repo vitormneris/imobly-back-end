@@ -12,4 +12,6 @@ class PropertyDomain(
     var garageSpaces: Int = 0,
     var address: AddressDomain = AddressDomain(),
     var category: CategoryDomain = CategoryDomain()
-)
+): Comparable<PropertyDomain> {
+    override fun compareTo(other: PropertyDomain): Int = this.title.compareTo(other.title)
+}

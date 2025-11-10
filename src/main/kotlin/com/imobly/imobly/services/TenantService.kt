@@ -12,6 +12,7 @@ import com.imobly.imobly.persistences.tenant.repositories.TenantRepository
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
+import java.util.Collections
 
 @Service
 class TenantService(
@@ -20,7 +21,11 @@ class TenantService(
     private val tenantMapper: TenantPersistenceMapper
 ) {
 
-    fun findAll(): List<TenantDomain> = tenantMapper.toDomains(repository.findAll())
+    fun findAll(): List<TenantDomain>  {
+        val list = tenantMapper.toDomains(repository.findAll())
+        Collections.sort(list)
+        return list
+    }
 
     fun findById(id: String): TenantDomain =
         tenantMapper.toDomain(repository.findById(id).orElseThrow {

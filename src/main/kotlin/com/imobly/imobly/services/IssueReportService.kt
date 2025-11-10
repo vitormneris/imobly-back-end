@@ -7,10 +7,12 @@ import com.imobly.imobly.domains.reports.StatusReportDomain
 import com.imobly.imobly.domains.users.tenant.TenantDomain
 import com.imobly.imobly.exceptions.ResourceNotFoundException
 import com.imobly.imobly.exceptions.enums.RuntimeErrorEnum
+import com.imobly.imobly.persistences.issuereport.entities.ReportEntity
 import com.imobly.imobly.persistences.issuereport.mappers.ReportPersistenceMapper
 import com.imobly.imobly.persistences.issuereport.repositories.ReportRepository
 import com.imobly.imobly.persistences.tenant.repositories.TenantRepository
 import org.springframework.stereotype.Service
+import java.util.Collections
 
 @Service
 class IssueReportService(
@@ -18,7 +20,11 @@ class IssueReportService(
     private val tenantRepository: TenantRepository,
     private val mapper: ReportPersistenceMapper
 ) {
-    fun findAll(): List<ReportDomain> = mapper.toDomains(reportRepository.findAll())
+    fun findAll(): List<ReportDomain> {
+        val list = mapper.toDomains(reportRepository.findAll())
+        Collections.sort(list)
+        return list
+    }
 
     fun findById(id: String): ReportDomain =
         mapper.toDomain(reportRepository.findById(id).orElseThrow({

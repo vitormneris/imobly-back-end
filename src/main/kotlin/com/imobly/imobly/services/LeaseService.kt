@@ -13,6 +13,7 @@ import com.imobly.imobly.persistences.property.repositories.PropertyRepository
 import com.imobly.imobly.persistences.tenant.repositories.TenantRepository
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
+import java.util.Collections
 
 @Service
 class LeaseService(
@@ -22,7 +23,11 @@ class LeaseService(
     private val paymentService: PaymentService,
     private val mapper: LeasePersistenceMapper
 ) {
-    fun findAll(): List<LeaseDomain> = mapper.toDomains(leaseRepository.findAll())
+    fun findAll(): List<LeaseDomain> {
+        val list = mapper.toDomains(leaseRepository.findAll())
+        Collections.sort(list)
+        return list
+    }
 
     fun findById(id: String): LeaseDomain =
         mapper.toDomain(leaseRepository.findById(id).orElseThrow {

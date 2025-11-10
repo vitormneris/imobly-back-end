@@ -11,6 +11,7 @@ import com.imobly.imobly.persistences.property.repositories.PropertyRepository
 import jdk.jfr.Category
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
+import java.util.Collections
 
 @Service
 class PropertyService(
@@ -19,8 +20,11 @@ class PropertyService(
     private val uploadService: UploadService,
     private val mapper: PropertyPersistenceMapper
 ) {
-    fun findAll(): List<PropertyDomain> = mapper.toDomains(propertyRepository.findAll())
-
+    fun findAll(): List<PropertyDomain> {
+        val list = mapper.toDomains(propertyRepository.findAll())
+        Collections.sort(list)
+        return list
+    }
     fun findById(id: String): PropertyDomain =
         mapper.toDomain(propertyRepository.findById(id).orElseThrow({
             throw ResourceNotFoundException(RuntimeErrorEnum.ERR0011)

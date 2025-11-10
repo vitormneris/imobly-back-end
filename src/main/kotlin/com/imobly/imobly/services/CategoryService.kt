@@ -8,12 +8,17 @@ import com.imobly.imobly.persistences.category.repositories.CategoryRepository
 import com.imobly.imobly.persistences.property.mappers.AddressPersistenceMapper
 import com.imobly.imobly.persistences.property.mappers.PropertyPersistenceMapper
 import org.springframework.stereotype.Service
+import java.util.Collections
 
 @Service
 class CategoryService(
     private val repository: CategoryRepository, private val mapper: CategoryPersistenceMapper
 ) {
-    fun findAll(): List<CategoryDomain> = mapper.toDomains(repository.findAll())
+    fun findAll(): List<CategoryDomain> {
+        val list = mapper.toDomains(repository.findAll())
+        Collections.sort(list)
+        return list
+    }
 
     fun findById(id: String): CategoryDomain =
         mapper.toDomain(repository.findById(id).orElseThrow({

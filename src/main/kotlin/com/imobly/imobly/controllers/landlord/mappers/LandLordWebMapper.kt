@@ -44,9 +44,9 @@ class LandLordWebMapper {
             email = landLord.email,
             password = "",
             telephones = TelephoneDTO(
-                landLord.telephones[0],
-                landLord.telephones[1],
-                landLord.telephones[2]
+                landLord.telephones.getOrNull(0),
+                landLord.telephones.getOrNull(1),
+                landLord.telephones.getOrNull(2)
             ),
             role = landLord.role
         )

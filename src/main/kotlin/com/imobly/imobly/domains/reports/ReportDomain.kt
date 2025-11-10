@@ -12,4 +12,7 @@ class ReportDomain(
     var status: ReportStatusEnum = ReportStatusEnum.NEW,
     var response: String = "",
     var tenant: TenantDomain
-)
+): Comparable<ReportDomain> {
+
+    override fun compareTo(other: ReportDomain): Int = -this.moment.compareTo(other.moment)
+}

@@ -19,5 +19,9 @@ class LeaseDomain(
     var securityDeposit: Double,
     var paymentDueDay: Int,
     var isEnabled: Boolean = true
-)
+): Comparable<LeaseDomain> {
+
+    override fun compareTo(other: LeaseDomain): Int = this.createdAt.compareTo(other.createdAt)
+
+}
 
