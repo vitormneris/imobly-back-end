@@ -9,6 +9,7 @@ import com.imobly.imobly.persistences.landlord.mappers.LandLordPersistenceMapper
 import com.imobly.imobly.persistences.landlord.repositories.LandLordRepository
 import com.imobly.imobly.persistences.tenant.mappers.TenantPersistenceMapper
 import com.imobly.imobly.persistences.tenant.repositories.TenantRepository
+import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.stereotype.Service
@@ -32,7 +33,7 @@ class UserDetailsService(
                     user = RegisteredUserDomain(tenantMapper.toRegisteredUserDomain(it))
                 },
                 {
-                    throw ResourceNotFoundException(RuntimeErrorEnum.ERR0012)
+                    throw BadCredentialsException("Tenant E-mail not found")
                 }
             )
             return user
@@ -44,7 +45,7 @@ class UserDetailsService(
                 user = RegisteredUserDomain(landLordMapper.toRegisteredUserDomain(it))
             },
             {
-                throw ResourceNotFoundException(RuntimeErrorEnum.ERR0013)
+                throw BadCredentialsException("Land Lord E-mail not found")
             }
         )
         return user

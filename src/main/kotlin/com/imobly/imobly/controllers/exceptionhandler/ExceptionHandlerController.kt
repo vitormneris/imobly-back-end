@@ -12,6 +12,7 @@ import com.imobly.imobly.exceptions.enums.RuntimeErrorEnum
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
@@ -68,6 +69,20 @@ class ExceptionHandlerController {
     ): ResponseEntity<ErrorMessageDTO> {
         val enum: RuntimeErrorEnum = exception.errorEnum
         val status: HttpStatus = HttpStatus.CONFLICT
+        val error = ErrorMessageDTO(
+            code = enum.code,
+            status = status.value(),
+            message = enum.message,
+            timestamp = Instant.now(),
+            path = request.requestURI
+        )
+        return ResponseEntity.status(status).body(error)
+    }
+
+    @ExceptionHandler(BadCredentialsException::class)
+    fun badCredentials(request: HttpServletRequest): ResponseEntity<ErrorMessageDTO> {
+        val enum: RuntimeErrorEnum = RuntimeErrorEnum.ERR0019
+        val status: HttpStatus = HttpStatus.FORBIDDEN
         val error = ErrorMessageDTO(
             code = enum.code,
             status = status.value(),

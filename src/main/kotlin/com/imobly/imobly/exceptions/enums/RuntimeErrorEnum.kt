@@ -9,8 +9,8 @@ enum class RuntimeErrorEnum(val code: String, val message: String) {
     ERR0006("DUPLICATE_RESOURCE", "Este CPF já está registrado"),
     ERR0007("DUPLICATE_RESOURCE", "Este RG já está registrado"),
     ERR0008("UPLOAD_OBJECT_ERROR", "Não foi possível obter a extensão do arquivo"),
-    ERR0009("MULTIPARTFILE_ERROR", "A(s) imagem(ns) é(são) obrigatória(s)"),
-    ERR0010("MULTIPARTFILE_ERROR", "O número de imagens deve estar entre 3 e 15"),
+    ERR0009("MULTIPART_FILE_ERROR", "A(s) imagem(ns) é(são) obrigatória(s)"),
+    ERR0010("MULTIPART_FILE_ERROR", "O número de imagens deve estar entre 3 e 15"),
     ERR0011("RESOURCE_NOT_FOUND", "A propriedade solicitada não foi encontrada"),
     ERR0012("RESOURCE_NOT_FOUND", "O locatário solicitado não foi encontrado"),
     ERR0013("RESOURCE_NOT_FOUND", "O locador solicitado não foi encontrado"),
@@ -18,5 +18,6 @@ enum class RuntimeErrorEnum(val code: String, val message: String) {
     ERR0015("RESOURCE_NOT_FOUND", "A reportação solicitada não foi encontrada"),
     ERR0016("RESOURCE_NOT_FOUND", "A locação solicitada não foi encontrada"),
     ERR0017("RESOURCE_NOT_FOUND", "O pagamento solicitado não foi encontrado"),
-    ERR0018("AUTHENTICATION_FAILED", "Token não encontrado")
+    ERR0018("AUTHENTICATION_FAILED", "O Token não foi encontrado"),
+    ERR0019("AUTHENTICATION_FAILED", "O E-mail ou a senha estão incorretos")
 }

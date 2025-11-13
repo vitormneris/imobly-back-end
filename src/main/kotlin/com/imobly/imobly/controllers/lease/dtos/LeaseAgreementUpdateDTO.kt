@@ -1,5 +1,6 @@
 package com.imobly.imobly.controllers.lease.dtos
 
+import com.fasterxml.jackson.annotation.JsonFormat
 import jakarta.validation.constraints.FutureOrPresent
 import jakarta.validation.constraints.Max
 import jakarta.validation.constraints.Min
@@ -8,10 +9,12 @@ import java.time.LocalDate
 
 data class LeaseAgreementUpdateDTO(
     @field:NotNull(message = "O campo data de início é obrigatório")
+    @field:JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     val startDate: LocalDate?,
 
     @field:NotNull(message = "O campo data de término é obrigatório")
     @field:FutureOrPresent(message = "O campo data de término deve ser um valor futuro")
+    @field:JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     val endDate: LocalDate?,
 
     @field:NotNull(message = "O campo aluguel é obrigatório")
