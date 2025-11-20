@@ -1,13 +1,17 @@
 package com.imobly.imobly.controllers.lease.mappers
 
 import com.imobly.imobly.controllers.category.mappers.CategoryWebMapper
+import com.imobly.imobly.controllers.lease.dtos.CreateLeaseDTO
 import com.imobly.imobly.controllers.lease.dtos.LeaseDTO
+import com.imobly.imobly.controllers.lease.dtos.UpdateLeaseDTO
 import com.imobly.imobly.controllers.payment.mappers.PaymentWebMapper
 import com.imobly.imobly.controllers.property.dtos.PropertyDTO
 import com.imobly.imobly.controllers.property.mappers.PropertyWebMapper
 import com.imobly.imobly.controllers.tenant.dtos.TenantDTO
 import com.imobly.imobly.controllers.tenant.mappers.TenantWebMapper
-import com.imobly.imobly.domains.leases.LeaseDomain
+import com.imobly.imobly.domains.LeaseDomain
+import com.imobly.imobly.domains.PropertyDomain
+import com.imobly.imobly.domains.users.TenantDomain
 import org.springframework.stereotype.Component
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -27,6 +31,26 @@ class LeaseWebMapper(val propertyMapper: PropertyWebMapper, val tenantMapper: Te
             monthlyRent = lease.monthlyRent ?: 0.0,
             securityDeposit = lease.securityDeposit ?: 0.0,
             paymentDueDay = lease.paymentDueDay ?: 1,
+        )
+
+    fun toDomain(lease: CreateLeaseDTO): LeaseDomain =
+        LeaseDomain(
+            startDate = lease.startDate ?: LocalDate.now(),
+            endDate = lease.endDate ?: LocalDate.now().plusYears(1),
+            property = PropertyDomain(id = lease.propertyId ?: ""),
+            tenant = TenantDomain(id = lease.tenantId ?: ""),
+            monthlyRent = lease.monthlyRent ?: 0.0,
+            securityDeposit = lease.securityDeposit ?: 0.0,
+            paymentDueDay = lease.paymentDueDay ?: 1
+        )
+
+    fun toDomain(lease: UpdateLeaseDTO): LeaseDomain =
+        LeaseDomain(
+            startDate = lease.startDate ?: LocalDate.now(),
+            endDate = lease.endDate ?: LocalDate.now().plusYears(1),
+            monthlyRent = lease.monthlyRent ?: 0.0,
+            securityDeposit = lease.securityDeposit ?: 0.0,
+            paymentDueDay = lease.paymentDueDay ?: 1
         )
 
     fun toDTO(lease: LeaseDomain): LeaseDTO =

@@ -1,5 +1,6 @@
 package com.imobly.imobly.persistences.property.mappers
 
+import com.imobly.imobly.domains.CategoryDomain
 import com.imobly.imobly.domains.PropertyDomain
 import com.imobly.imobly.persistences.category.mappers.CategoryPersistenceMapper
 import com.imobly.imobly.persistences.property.entities.PropertyEntity

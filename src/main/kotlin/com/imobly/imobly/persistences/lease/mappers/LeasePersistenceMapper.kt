@@ -1,6 +1,6 @@
 package com.imobly.imobly.persistences.lease.mappers
 
-import com.imobly.imobly.domains.leases.LeaseDomain
+import com.imobly.imobly.domains.LeaseDomain
 import com.imobly.imobly.persistences.category.mappers.CategoryPersistenceMapper
 import com.imobly.imobly.persistences.lease.entities.LeaseEntity
 import com.imobly.imobly.persistences.payment.mappers.PaymentPersistenceMapper

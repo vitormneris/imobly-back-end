@@ -7,13 +7,13 @@ import jakarta.validation.constraints.Min
 import jakarta.validation.constraints.NotNull
 import java.time.LocalDate
 
-data class LeaseAgreementUpdateDTO(
+data class UpdateLeaseDTO(
     @field:NotNull(message = "O campo data de início é obrigatório")
     @field:JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     val startDate: LocalDate?,
 
     @field:NotNull(message = "O campo data de término é obrigatório")
-    @field:FutureOrPresent(message = "O campo data de término deve ser um valor futuro")
+    @field:FutureOrPresent(message = "O campo data de término deve estar no presente ou futuro")
     @field:JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     val endDate: LocalDate?,
 

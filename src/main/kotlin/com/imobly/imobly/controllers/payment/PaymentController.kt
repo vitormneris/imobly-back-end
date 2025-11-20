@@ -2,8 +2,8 @@ package com.imobly.imobly.controllers.payment
 
 import com.imobly.imobly.controllers.payment.dtos.PaymentDTO
 import com.imobly.imobly.controllers.payment.dtos.StatusInstallmentDTO
+import com.imobly.imobly.controllers.payment.mappers.MonthlyInstallmentWebMapper
 import com.imobly.imobly.controllers.payment.mappers.PaymentWebMapper
-import com.imobly.imobly.controllers.payment.mappers.StatusInstallmentWebMapper
 import com.imobly.imobly.services.PaymentService
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController
 class PaymentController(
     val service: PaymentService,
     val paymentMapper: PaymentWebMapper,
-    val installmentMapper: StatusInstallmentWebMapper
+    val installmentMapper: MonthlyInstallmentWebMapper
 ) {
     @GetMapping("/encontrartodos")
     fun findAll(): ResponseEntity<List<PaymentDTO>> = ResponseEntity.ok().body(

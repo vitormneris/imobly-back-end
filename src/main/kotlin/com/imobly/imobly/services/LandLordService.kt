@@ -1,9 +1,8 @@
 package com.imobly.imobly.services
 
 import com.imobly.imobly.domains.enums.UserRoleEnum
-import com.imobly.imobly.domains.users.landlord.LandLordDomain
-import com.imobly.imobly.domains.users.tenant.TenantDomain
-import com.imobly.imobly.domains.users.landlord.UpdateLandLordDomain
+import com.imobly.imobly.domains.users.LandLordDomain
+import com.imobly.imobly.domains.users.TenantDomain
 import com.imobly.imobly.exceptions.DuplicateResourceException
 import com.imobly.imobly.exceptions.ResourceNotFoundException
 import com.imobly.imobly.exceptions.enums.RuntimeErrorEnum
@@ -19,6 +18,7 @@ class LandLordService(private val repository: LandLordRepository, private val ma
         mapper.toDomain(repository.findById(id).orElseThrow {
             throw ResourceNotFoundException(RuntimeErrorEnum.ERR0013)
         })
+
     fun findByEmail(email: String): LandLordDomain =
         mapper.toDomain(repository.findByEmail(email).orElseThrow {
             throw ResourceNotFoundException(RuntimeErrorEnum.ERR0013)
@@ -32,40 +32,30 @@ class LandLordService(private val repository: LandLordRepository, private val ma
         return mapper.toDomain(landLordSaved)
     }
 
-    fun update(id: String, landLord: UpdateLandLordDomain): LandLordDomain {
-        val landLordInDatabase = mapper.toDomain(repository.findById(id).orElseThrow {
+    fun update(id: String, landLord: LandLordDomain): LandLordDomain {
+        val landLordFound = mapper.toDomain(repository.findById(id).orElseThrow {
             throw ResourceNotFoundException(RuntimeErrorEnum.ERR0013)
         })
 
         checkUniqueFields(landLord, id)
 
-        landLordInDatabase.firstName = landLord.firstName
-        landLordInDatabase.lastName = landLord.lastName
-        landLordInDatabase.email = landLord.email
-        landLordInDatabase.telephones = landLord.telephones
+        landLordFound.firstName = landLord.firstName
+        landLordFound.lastName = landLord.lastName
+        landLordFound.email = landLord.email
+        landLordFound.telephones = landLord.telephones
 
-        val landLordUpdated = repository.save(mapper.toEntity(landLordInDatabase))
+        val landLordUpdated = repository.save(mapper.toEntity(landLordFound))
         return mapper.toDomain(landLordUpdated)
     }
 
     fun delete(id: String) {
-        repository.findById(id).orElseThrow({
+        if (!repository.existsById(id))
             throw ResourceNotFoundException(RuntimeErrorEnum.ERR0013)
-        })
         repository.deleteById(id)
     }
 
     private fun checkUniqueFields(landLord: LandLordDomain, id: String = "") {
-        repository.findByEmail(landLord.email).ifPresent {
-            if (it.email == landLord.email && it.id != id)
-                throw DuplicateResourceException(RuntimeErrorEnum.ERR0005)
-        }
-    }
-
-    private fun checkUniqueFields(landLord: UpdateLandLordDomain, id: String = "") {
-        repository.findByEmail(landLord.email).ifPresent {
-            if (it.email == landLord.email && it.id != id)
-                throw DuplicateResourceException(RuntimeErrorEnum.ERR0005)
-        }
+        if (repository.existsByEmailAndIdNot(landLord.email, id))
+            throw DuplicateResourceException(RuntimeErrorEnum.ERR0005)
     }
 }

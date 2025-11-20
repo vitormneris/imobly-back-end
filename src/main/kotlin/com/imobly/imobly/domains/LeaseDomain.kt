@@ -1,7 +1,6 @@
-package com.imobly.imobly.domains.leases
+package com.imobly.imobly.domains
 
-import com.imobly.imobly.domains.PropertyDomain
-import com.imobly.imobly.domains.users.tenant.TenantDomain
+import com.imobly.imobly.domains.users.TenantDomain
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
@@ -12,8 +11,8 @@ class LeaseDomain(
     var endDate: LocalDate,
     var createdAt: LocalDateTime = LocalDateTime.now(),
     var lastUpdatedAt: LocalDateTime = LocalDateTime.now(),
-    var property: PropertyDomain,
-    var tenant: TenantDomain,
+    var property: PropertyDomain = PropertyDomain(),
+    var tenant: TenantDomain = TenantDomain(),
     var durationInMonths: Long = ChronoUnit.MONTHS.between(startDate, LocalDate.now()),
     var monthlyRent: Double,
     var securityDeposit: Double,
@@ -24,4 +23,3 @@ class LeaseDomain(
     override fun compareTo(other: LeaseDomain): Int = this.createdAt.compareTo(other.createdAt)
 
 }
-

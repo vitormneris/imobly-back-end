@@ -10,6 +10,11 @@ interface TenantRepository : JpaRepository<TenantEntity, String> {
 
     fun findByFirstNameContainingOrLastNameContainingOrCpfContainingAllIgnoreCase(firstName: String, lastName: String, cpf: String): List<TenantEntity>
     fun findByEmail(email: String): Optional<TenantEntity>
-    fun findByRg(rg: String): Optional<TenantEntity>
-    fun findByCpf(cpf: String): Optional<TenantEntity>
+
+    fun existsByEmailAndIdNot(email: String, id: String): Boolean
+
+    fun existsByRgAndIdNot(rg: String, id: String): Boolean
+
+    fun existsByCpfAndIdNot(cpf: String, id: String): Boolean
+
 }

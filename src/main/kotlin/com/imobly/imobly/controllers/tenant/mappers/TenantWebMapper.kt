@@ -6,18 +6,16 @@ import com.imobly.imobly.controllers.tenant.dtos.LandLordUpdateTenantDTO
 import com.imobly.imobly.controllers.tenant.dtos.TelephoneDTO
 import com.imobly.imobly.controllers.tenant.dtos.TenantDTO
 import com.imobly.imobly.controllers.tenant.dtos.SelfUpdateTenantDTO
-import com.imobly.imobly.domains.users.tenant.TenantDomain
+import com.imobly.imobly.domains.users.TenantDomain
 import com.imobly.imobly.domains.enums.MaritalStatusEnum
-import com.imobly.imobly.domains.users.tenant.LandLordUpdateTenantDomain
-import com.imobly.imobly.domains.users.tenant.SelfUpdateTenantDomain
 import org.springframework.stereotype.Component
 import java.time.LocalDate
 
 @Component
 class TenantWebMapper(val addressMapper: AddressWebMapper) {
 
-    fun toDomain(tenant: LandLordUpdateTenantDTO): LandLordUpdateTenantDomain =
-        LandLordUpdateTenantDomain(
+    fun toDomain(tenant: LandLordUpdateTenantDTO): TenantDomain =
+        TenantDomain(
             firstName = (tenant.firstName ?: "").trim(),
             lastName = (tenant.lastName ?: "").trim(),
             email = (tenant.email ?: "").trim(),
@@ -35,8 +33,8 @@ class TenantWebMapper(val addressMapper: AddressWebMapper) {
             address = addressMapper.toDomain(tenant.address ?: AddressDTO())
         )
 
-    fun toDomain(tenant: SelfUpdateTenantDTO): SelfUpdateTenantDomain =
-        SelfUpdateTenantDomain(
+    fun toDomain(tenant: SelfUpdateTenantDTO): TenantDomain =
+        TenantDomain(
             email = (tenant.email ?: "").trim(),
             telephones = listOf(
                 tenant.telephones?.telephone1?.trim() ?: "",
@@ -45,8 +43,8 @@ class TenantWebMapper(val addressMapper: AddressWebMapper) {
             )
         )
 
-    fun toDomainOnlyId(tenant: TenantDTO): TenantDomain =
-        TenantDomain(id = tenant.id)
+    fun toDomainOnlyId(tenantId: String): TenantDomain =
+        TenantDomain(id = tenantId)
 
     fun toDomain(tenant: TenantDTO): TenantDomain =
         TenantDomain(

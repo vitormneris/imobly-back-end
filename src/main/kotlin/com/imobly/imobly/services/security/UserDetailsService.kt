@@ -2,7 +2,7 @@ package com.imobly.imobly.services.security
 
 import com.imobly.imobly.domains.enums.UserRoleEnum
 import com.imobly.imobly.domains.users.RegisteredUserDomain
-import com.imobly.imobly.domains.users.tenant.TenantDomain
+import com.imobly.imobly.domains.users.TenantDomain
 import com.imobly.imobly.exceptions.ResourceNotFoundException
 import com.imobly.imobly.exceptions.enums.RuntimeErrorEnum
 import com.imobly.imobly.persistences.landlord.mappers.LandLordPersistenceMapper

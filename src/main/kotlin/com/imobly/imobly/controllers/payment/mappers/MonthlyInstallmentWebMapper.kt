@@ -1,6 +1,7 @@
 package com.imobly.imobly.controllers.payment.mappers
 
 import com.imobly.imobly.controllers.payment.dtos.MonthlyInstallmentDTO
+import com.imobly.imobly.controllers.payment.dtos.StatusInstallmentDTO
 import com.imobly.imobly.domains.enums.PaymentStatusEnum
 import com.imobly.imobly.domains.payments.MonthlyInstallmentDomain
 import org.springframework.stereotype.Component
@@ -35,4 +36,9 @@ class MonthlyInstallmentWebMapper {
         monthlyInstallments.map{
             toDTO(it)
         }
+
+    fun toDomain(statusInstallment: StatusInstallmentDTO): MonthlyInstallmentDomain =
+        MonthlyInstallmentDomain(
+            status = statusInstallment.status ?: PaymentStatusEnum.PENDING,
+        )
 }

@@ -32,18 +32,19 @@ class CategoryService(
     }
 
     fun update(id: String, category: CategoryDomain): CategoryDomain {
-        repository.findById(id).orElseThrow({
-            throw ResourceNotFoundException(RuntimeErrorEnum.ERR0014)
-        })
-        category.id = id
-        val categoryUpdated = repository.save(mapper.toEntity(category))
+        val categoryFound = mapper.toDomainWithoutProperties(
+            repository.findById(id).orElseThrow {
+                throw ResourceNotFoundException(RuntimeErrorEnum.ERR0014)
+            }
+        )
+        categoryFound.title = category.title
+        val categoryUpdated = repository.save(mapper.toEntity(categoryFound))
         return mapper.toDomain(categoryUpdated, PropertyPersistenceMapper(AddressPersistenceMapper()))
     }
 
     fun delete(id: String) {
-        repository.findById(id).orElseThrow({
+        if (!repository.existsById(id))
             throw ResourceNotFoundException(RuntimeErrorEnum.ERR0014)
-        })
         repository.deleteById(id)
     }
 }

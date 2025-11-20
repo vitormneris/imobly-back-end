@@ -1,6 +1,6 @@
 package com.imobly.imobly.domains.payments
 
-import com.imobly.imobly.domains.leases.LeaseDomain
+import com.imobly.imobly.domains.LeaseDomain
 
 class PaymentDomain(
     var id: String? = null,

@@ -4,6 +4,7 @@ import com.imobly.imobly.exceptions.AuthenticationFailedException
 import com.imobly.imobly.exceptions.enums.RuntimeErrorEnum
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
+import jakarta.servlet.http.HttpServletRequest
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import java.util.Base64
@@ -51,4 +52,8 @@ class TokenService(@field:Value("\${jwt.secret}") private val secret: String = "
             .parseClaimsJws(token)
             .body
 
+    fun getIdFromRequest(request: HttpServletRequest): String {
+        val token = extractToken(request.getHeader("Authorization"))
+        return extractId(token)
+    }
 }

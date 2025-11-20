@@ -1,15 +1,13 @@
 package com.imobly.imobly.services
 
 import com.imobly.imobly.domains.enums.PaymentStatusEnum
-import com.imobly.imobly.domains.leases.LeaseDomain
+import com.imobly.imobly.domains.LeaseDomain
 import com.imobly.imobly.domains.payments.MonthlyInstallmentDomain
 import com.imobly.imobly.domains.payments.PaymentDomain
-import com.imobly.imobly.domains.payments.StatusInstallmentDomain
 import com.imobly.imobly.exceptions.ResourceNotFoundException
 import com.imobly.imobly.exceptions.enums.RuntimeErrorEnum
 import com.imobly.imobly.persistences.payment.mappers.PaymentPersistenceMapper
 import com.imobly.imobly.persistences.payment.repositories.PaymentRepository
-import io.jsonwebtoken.lang.Collections
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
@@ -47,10 +45,10 @@ class PaymentService(
         return mapper.toDomain(paymentSaved)
     }
 
-    fun updateStatusInstallment(idPayment: String, idInstallment: String, statusInstallment: StatusInstallmentDomain) {
-        val payment = mapper.toDomain(paymentRepository.findById(idPayment).orElseThrow({
+    fun updateStatusInstallment(idPayment: String, idInstallment: String, statusInstallment: MonthlyInstallmentDomain) {
+        val payment = mapper.toDomain(paymentRepository.findById(idPayment).orElseThrow {
             throw ResourceNotFoundException(RuntimeErrorEnum.ERR0017)
-        }))
+        })
         payment.installments = payment.installments.map {
             if (it.id == idInstallment) it.status = statusInstallment.status
             it

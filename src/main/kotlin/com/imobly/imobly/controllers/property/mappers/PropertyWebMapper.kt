@@ -4,10 +4,15 @@ import com.imobly.imobly.controllers.category.mappers.CategoryWebMapper
 import com.imobly.imobly.controllers.property.dtos.AddressDTO
 import com.imobly.imobly.domains.PropertyDomain
 import com.imobly.imobly.controllers.property.dtos.PropertyDTO
+import com.imobly.imobly.controllers.tenant.dtos.TenantDTO
+import com.imobly.imobly.domains.users.TenantDomain
 import org.springframework.stereotype.Component
 
 @Component
 class PropertyWebMapper(val addressMapper: AddressWebMapper) {
+
+    fun toDomainOnlyId(propertyId: String): PropertyDomain =
+        PropertyDomain(id = propertyId)
 
     fun toDomain(property: PropertyDTO, categoryMapper: CategoryWebMapper): PropertyDomain =
         PropertyDomain(

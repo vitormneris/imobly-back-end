@@ -1,14 +1,13 @@
 package com.imobly.imobly.controllers.issuereport
 
-import com.imobly.imobly.controllers.issuereport.dtos.ComplaintDTO
+import com.imobly.imobly.controllers.issuereport.dtos.TenantCreateReportDTO
 import com.imobly.imobly.controllers.issuereport.mappers.ReportWebMapper
 import com.imobly.imobly.controllers.issuereport.dtos.ReportDTO
-import com.imobly.imobly.controllers.issuereport.dtos.ResponseReportDTO
-import com.imobly.imobly.controllers.issuereport.dtos.StatusReportDTO
-import com.imobly.imobly.controllers.issuereport.mappers.ComplaintWebMapper
-import com.imobly.imobly.controllers.issuereport.mappers.ResponseReportWebMapper
-import com.imobly.imobly.controllers.issuereport.mappers.StatusReportWebMapper
+import com.imobly.imobly.controllers.issuereport.dtos.LandLordResponseReportDTO
+import com.imobly.imobly.controllers.issuereport.dtos.LandLordStatusReportDTO
 import com.imobly.imobly.services.IssueReportService
+import com.imobly.imobly.services.security.TokenService
+import jakarta.servlet.http.HttpServletRequest
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -25,38 +24,43 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/reportacoes")
 class IssueReportController(
-    val service: IssueReportService,
-    val reportMapper: ReportWebMapper,
-    val complaintMapper: ComplaintWebMapper,
-    val statusReportMapper: StatusReportWebMapper,
-    val responseReportMapper: ResponseReportWebMapper
+    private val service: IssueReportService,
+    private val mapper: ReportWebMapper,
+    private val tokenService: TokenService
 ) {
+
     @GetMapping("/encontrartodos")
     fun findAllByTitleAndDescription(@RequestParam("titulooumensagem") titleOrMessage: String): ResponseEntity<List<ReportDTO>> =
-        ResponseEntity.ok().body(reportMapper.toDTOs(service.findAllByTitleOrDescription(titleOrMessage)))
+        ResponseEntity.ok().body(
+            mapper.toDTOs(service.findAllByTitleOrDescription(titleOrMessage))
+        )
 
     @GetMapping("/encontrarporid/{id}")
     fun findById(@PathVariable id: String): ResponseEntity<ReportDTO> =
-        ResponseEntity.ok().body(reportMapper.toDTO(service.findById(id)))
+        ResponseEntity.ok().body(
+            mapper.toDTO(service.findById(id))
+        )
 
     @PostMapping("/inserir")
-    fun insert(@Valid @RequestBody complaint: ComplaintDTO, ): ResponseEntity<ReportDTO> =
-        ResponseEntity.status(HttpStatus.CREATED).body(
-            reportMapper.toDTO(service.insert(complaintMapper.toDomain(complaint)))
+    fun insert(@Valid @RequestBody report: TenantCreateReportDTO, request: HttpServletRequest): ResponseEntity<ReportDTO> {
+        val tenantId = tokenService.getIdFromRequest(request)
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+            mapper.toDTO(service.insert(mapper.toDomain(report), tenantId))
         )
+    }
 
     @PatchMapping("/responderreportacao/{id}")
     fun replyToReport(
-        @PathVariable id: String, @Valid @RequestBody response: ResponseReportDTO,
+        @PathVariable id: String, @Valid @RequestBody response: LandLordResponseReportDTO,
     ): ResponseEntity<ReportDTO> = ResponseEntity.ok().body(
-        reportMapper.toDTO(service.replyToReport(id, responseReportMapper.toDomain(response)))
+        mapper.toDTO(service.replyToReport(id, mapper.toDomain(response)))
     )
 
     @PatchMapping("/atualizarstatus/{id}")
     fun updateStatus(
-        @PathVariable id: String, @Valid @RequestBody status: StatusReportDTO,
+        @PathVariable id: String, @Valid @RequestBody status: LandLordStatusReportDTO,
     ): ResponseEntity<ReportDTO> = ResponseEntity.ok().body(
-        reportMapper.toDTO(service.updateStatus(id, statusReportMapper.toDomain(status)))
+        mapper.toDTO(service.updateStatus(id, mapper.toDomain(status)))
     )
 
     @DeleteMapping("/deletar/{id}")

@@ -1,12 +1,18 @@
 package com.imobly.imobly.persistences.issuereport.mappers
 
-import com.imobly.imobly.domains.reports.ReportDomain
+import com.imobly.imobly.domains.ReportDomain
+import com.imobly.imobly.persistences.category.mappers.CategoryPersistenceMapper
 import com.imobly.imobly.persistences.issuereport.entities.ReportEntity
+import com.imobly.imobly.persistences.property.mappers.PropertyPersistenceMapper
 import com.imobly.imobly.persistences.tenant.mappers.TenantPersistenceMapper
 import org.springframework.stereotype.Component
 
 @Component
-class ReportPersistenceMapper(val tenantMapper: TenantPersistenceMapper) {
+class ReportPersistenceMapper(
+    val tenantMapper: TenantPersistenceMapper,
+    val propertyMapper: PropertyPersistenceMapper
+) {
+
     fun toDomain(report: ReportEntity): ReportDomain =
         ReportDomain(
             report.id,
@@ -15,7 +21,8 @@ class ReportPersistenceMapper(val tenantMapper: TenantPersistenceMapper) {
             report.moment,
             report.status,
             report.response,
-            tenantMapper.toDomain(report.tenant)
+            tenantMapper.toDomain(report.tenant),
+            propertyMapper.toDomain(report.property, CategoryPersistenceMapper())
         )
 
     fun toDomains(reports: List<ReportEntity>): List<ReportDomain> =
@@ -29,6 +36,7 @@ class ReportPersistenceMapper(val tenantMapper: TenantPersistenceMapper) {
             report.moment,
             report.status,
             report.response,
-            tenantMapper.toEntity(report.tenant)
+            tenantMapper.toEntity(report.tenant),
+            propertyMapper.toEntity(report.property, CategoryPersistenceMapper())
         )
 }

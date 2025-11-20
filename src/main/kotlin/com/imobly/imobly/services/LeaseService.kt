@@ -1,9 +1,8 @@
 package com.imobly.imobly.services
 
-import com.imobly.imobly.domains.leases.LeaseAgreementDomain
-import com.imobly.imobly.domains.leases.LeaseDomain
+import com.imobly.imobly.domains.LeaseDomain
 import com.imobly.imobly.domains.PropertyDomain
-import com.imobly.imobly.domains.users.tenant.TenantDomain
+import com.imobly.imobly.domains.users.TenantDomain
 import com.imobly.imobly.exceptions.InvalidArgumentsException
 import com.imobly.imobly.exceptions.ResourceNotFoundException
 import com.imobly.imobly.exceptions.enums.RuntimeErrorEnum
@@ -39,20 +38,18 @@ class LeaseService(
         })
 
 
-    fun insert(leaseAgreement: LeaseAgreementDomain): LeaseDomain {
-        propertyRepository.findById(leaseAgreement.propertyId).orElseThrow({
+    fun insert(leaseAgreement: LeaseDomain): LeaseDomain {
+        if (!propertyRepository.existsById(leaseAgreement.property.id ?: ""))
             throw ResourceNotFoundException(RuntimeErrorEnum.ERR0011)
-        })
-        tenantRepository.findById(leaseAgreement.tenantId).orElseThrow({
+        if (!tenantRepository.existsById(leaseAgreement.tenant.id ?: ""))
             throw ResourceNotFoundException(RuntimeErrorEnum.ERR0012)
-        })
         if (leaseAgreement.endDate.isBefore(leaseAgreement.startDate))
             throw InvalidArgumentsException(RuntimeErrorEnum.ERR0002)
         val lease = LeaseDomain(
             startDate = leaseAgreement.startDate,
             endDate = leaseAgreement.endDate,
-            property = PropertyDomain(id = leaseAgreement.propertyId),
-            tenant = TenantDomain(id = leaseAgreement.tenantId),
+            property = PropertyDomain(id = leaseAgreement.property.id),
+            tenant = TenantDomain(id = leaseAgreement.tenant.id),
             monthlyRent = leaseAgreement.monthlyRent,
             securityDeposit = leaseAgreement.securityDeposit,
             paymentDueDay = leaseAgreement.paymentDueDay
@@ -62,10 +59,10 @@ class LeaseService(
         return mapper.toDomain(leaseSaved)
     }
 
-    fun update(id: String, leaseWithNewData: LeaseAgreementDomain): LeaseDomain {
-        val lease = mapper.toDomain(leaseRepository.findById(id).orElseThrow({
+    fun update(id: String, leaseWithNewData: LeaseDomain): LeaseDomain {
+        val lease = mapper.toDomain(leaseRepository.findById(id).orElseThrow {
             throw ResourceNotFoundException(RuntimeErrorEnum.ERR0016)
-        }))
+        })
         if (leaseWithNewData.endDate.isBefore(leaseWithNewData.startDate))
             throw InvalidArgumentsException(RuntimeErrorEnum.ERR0002)
         lease.startDate = leaseWithNewData.startDate
@@ -83,6 +80,7 @@ class LeaseService(
             throw ResourceNotFoundException(RuntimeErrorEnum.ERR0016)
         }))
         lease.isEnabled = !lease.isEnabled
+        lease.lastUpdatedAt = LocalDateTime.now()
         leaseRepository.save(mapper.toEntity(lease))
     }
 }

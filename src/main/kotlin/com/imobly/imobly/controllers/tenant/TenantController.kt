@@ -22,7 +22,7 @@ class TenantController(
 
     @GetMapping("/encontrarperfil")
     fun findProfile(request: HttpServletRequest): ResponseEntity<TenantDTO> {
-        val id = getIdFromRequest(request)
+        val id = tokenService.getIdFromRequest(request)
         return ResponseEntity.ok().body(mapper.toDTO(service.findById(id)))
     }
 
@@ -32,7 +32,7 @@ class TenantController(
         @Validated @RequestPart("tenant") tenant: SelfUpdateTenantDTO,
         @RequestPart(value = "file", required = false) file: MultipartFile?
     ): ResponseEntity<TenantDTO> {
-        val id = getIdFromRequest(request)
+        val id = tokenService.getIdFromRequest(request)
         return ResponseEntity.ok().body(
             mapper.toDTO(
                 service.selfUpdate(id, mapper.toDomain(tenant), file)
@@ -57,10 +57,5 @@ class TenantController(
     fun delete(@PathVariable id: String): ResponseEntity<Void> {
         service.delete(id)
         return ResponseEntity.ok().build()
-    }
-
-    private fun getIdFromRequest(request: HttpServletRequest): String {
-        val token = tokenService.extractToken(request.getHeader("Authorization"))
-        return tokenService.extractId(token)
     }
 }

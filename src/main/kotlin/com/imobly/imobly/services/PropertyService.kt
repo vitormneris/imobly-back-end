@@ -34,9 +34,9 @@ class PropertyService(
     fun insert(property: PropertyDomain, files: List<MultipartFile>?): PropertyDomain {
         uploadService.checkIfMultipartFileListIsNull(files)
         uploadService.checkIfMultipartFilesListIsInTheInterval(files!!)
-        categoryRepository.findById(property.category.id ?: "").orElseThrow({
+        if (!categoryRepository.existsById(property.category.id ?: "")) {
             throw ResourceNotFoundException(RuntimeErrorEnum.ERR0014)
-        })
+        }
         property.pathImages = files.map { uploadService.uploadImage(it) }
         val propertySaved = propertyRepository.save(mapper.toEntity(property, CategoryPersistenceMapper()))
         return mapper.toDomain(propertySaved, CategoryPersistenceMapper())
@@ -46,9 +46,9 @@ class PropertyService(
         property.pathImages = propertyRepository.findById(id).orElseThrow({
             throw ResourceNotFoundException(RuntimeErrorEnum.ERR0011)
         }).pathImages
-        categoryRepository.findById(property.category.id ?: "").orElseThrow({
+        if (!categoryRepository.existsById(property.category.id ?: ""))
             throw ResourceNotFoundException(RuntimeErrorEnum.ERR0014)
-        })
+
         property.id = id
         if (files != null) {
             uploadService.checkIfMultipartFilesListIsInTheInterval(files)
@@ -59,9 +59,9 @@ class PropertyService(
     }
 
     fun delete(id: String) {
-        propertyRepository.findById(id).orElseThrow({
+        if (!propertyRepository.existsById(id))
             throw ResourceNotFoundException(RuntimeErrorEnum.ERR0011)
-        })
+
         propertyRepository.deleteById(id)
     }
 }

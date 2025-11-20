@@ -27,13 +27,13 @@ class LandLordController(
 ) {
     @GetMapping("/encontrarperfil")
     fun findProfile(request: HttpServletRequest): ResponseEntity<LandLordDTO> {
-        val id = getIdFromRequest(request)
+        val id = tokenService.getIdFromRequest(request)
         return ResponseEntity.ok().body(mapper.toDTO(service.findById(id)))
     }
 
     @PutMapping("/atualizarperfil")
     fun updateProfile(request: HttpServletRequest, @Valid @RequestBody landlord: UpdateLandLordDTO): ResponseEntity<LandLordDTO> {
-        val id = getIdFromRequest(request)
+        val id = tokenService.getIdFromRequest(request)
         return ResponseEntity.ok().body(
             mapper.toDTO(service.update(id, mapper.toDomain(landlord)))
         )
@@ -41,13 +41,8 @@ class LandLordController(
 
     @DeleteMapping("/deletarperfil")
     fun deleteProfile(request: HttpServletRequest): ResponseEntity<Void> {
-        val id = getIdFromRequest(request)
+        val id = tokenService.getIdFromRequest(request)
         service.delete(id)
         return ResponseEntity.ok().build()
-    }
-
-    private fun getIdFromRequest(request: HttpServletRequest): String {
-        val token = tokenService.extractToken(request.getHeader("Authorization"))
-        return tokenService.extractId(token)
     }
 }

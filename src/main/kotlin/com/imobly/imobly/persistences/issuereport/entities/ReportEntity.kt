@@ -1,6 +1,7 @@
 package com.imobly.imobly.persistences.issuereport.entities
 
 import com.imobly.imobly.domains.enums.ReportStatusEnum
+import com.imobly.imobly.persistences.property.entities.PropertyEntity
 import com.imobly.imobly.persistences.tenant.entities.TenantEntity
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -30,5 +31,8 @@ class ReportEntity(
     val response: String,
     @ManyToOne
     @JoinColumn(name = "fk_locatario_id", referencedColumnName = "id")
-    val tenant: TenantEntity
+    val tenant: TenantEntity,
+    @ManyToOne
+    @JoinColumn(name = "fk_propriedade_id", referencedColumnName = "id")
+    val property: PropertyEntity
 )

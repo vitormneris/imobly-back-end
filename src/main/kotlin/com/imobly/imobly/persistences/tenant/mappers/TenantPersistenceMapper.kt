@@ -1,8 +1,7 @@
 package com.imobly.imobly.persistences.tenant.mappers
 
 import com.imobly.imobly.domains.users.RegisteredUserDomain
-import com.imobly.imobly.domains.users.tenant.LandLordUpdateTenantDomain
-import com.imobly.imobly.domains.users.tenant.TenantDomain
+import com.imobly.imobly.domains.users.TenantDomain
 import com.imobly.imobly.persistences.property.mappers.AddressPersistenceMapper
 import com.imobly.imobly.persistences.tenant.entities.TenantEntity
 import org.springframework.stereotype.Component

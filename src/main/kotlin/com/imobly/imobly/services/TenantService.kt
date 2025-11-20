@@ -1,9 +1,7 @@
 package com.imobly.imobly.services
 
 import com.imobly.imobly.domains.enums.UserRoleEnum
-import com.imobly.imobly.domains.users.tenant.LandLordUpdateTenantDomain
-import com.imobly.imobly.domains.users.tenant.SelfUpdateTenantDomain
-import com.imobly.imobly.domains.users.tenant.TenantDomain
+import com.imobly.imobly.domains.users.TenantDomain
 import com.imobly.imobly.exceptions.DuplicateResourceException
 import com.imobly.imobly.exceptions.ResourceNotFoundException
 import com.imobly.imobly.exceptions.enums.RuntimeErrorEnum
@@ -51,78 +49,59 @@ class TenantService(
         return tenantMapper.toDomain(tenantSaved)
     }
 
-    fun landLordUpdate(id: String, tenant: LandLordUpdateTenantDomain, file: MultipartFile?): TenantDomain {
-        val tenantInDatabase = tenantMapper.toDomain(repository.findById(id).orElseThrow {
+    fun landLordUpdate(id: String, tenant: TenantDomain, file: MultipartFile?): TenantDomain {
+        val tenantFound = tenantMapper.toDomain(repository.findById(id).orElseThrow {
             throw ResourceNotFoundException(RuntimeErrorEnum.ERR0012)
         })
 
-        tenantInDatabase.firstName = tenant.firstName
-        tenantInDatabase.lastName = tenant.lastName
-        tenantInDatabase.cpf = tenant.cpf
-        tenantInDatabase.rg = tenant.rg
-        tenantInDatabase.email = tenant.email
-        tenantInDatabase.nationality = tenant.nationality
-        tenantInDatabase.maritalStatus = tenant.maritalStatus
-        tenantInDatabase.job = tenant.job
-        tenantInDatabase.telephones = tenant.telephones
-        tenantInDatabase.birthDate = tenant.birthDate
-        tenantInDatabase.address = tenant.address
+        tenantFound.firstName = tenant.firstName
+        tenantFound.lastName = tenant.lastName
+        tenantFound.cpf = tenant.cpf
+        tenantFound.rg = tenant.rg
+        tenantFound.email = tenant.email
+        tenantFound.nationality = tenant.nationality
+        tenantFound.maritalStatus = tenant.maritalStatus
+        tenantFound.job = tenant.job
+        tenantFound.telephones = tenant.telephones
+        tenantFound.birthDate = tenant.birthDate
+        tenantFound.address = tenant.address
 
         checkUniqueFields(tenant, id)
         if (file != null)
-            tenantInDatabase.pathImage = uploadService.uploadImage(file)
+            tenantFound.pathImage = uploadService.uploadImage(file)
 
-        val tenantUpdated = repository.save(tenantMapper.toEntity(tenantInDatabase))
+        val tenantUpdated = repository.save(tenantMapper.toEntity(tenantFound))
         return tenantMapper.toDomain(tenantUpdated)
     }
 
-    fun selfUpdate(id: String, restrictedTenant: SelfUpdateTenantDomain, file: MultipartFile?): TenantDomain {
-        val tenant = tenantMapper.toDomain(repository.findById(id).orElseThrow {
+    fun selfUpdate(id: String, tenant: TenantDomain, file: MultipartFile?): TenantDomain {
+        val tenantFound = tenantMapper.toDomain(repository.findById(id).orElseThrow {
             throw ResourceNotFoundException(RuntimeErrorEnum.ERR0012)
         })
-        checkUniqueFields(restrictedTenant, id)
-        tenant.email = restrictedTenant.email
-        tenant.telephones = restrictedTenant.telephones
-        if (file != null) {
-            tenant.pathImage = uploadService.uploadImage(file)
-        }
+        checkUniqueFields(tenant, id)
+        tenantFound.email = tenant.email
+        tenantFound.telephones = tenant.telephones
+        if (file != null)
+            tenantFound.pathImage = uploadService.uploadImage(file)
+
         val tenantUpdated = repository.save(tenantMapper.toEntity(tenant))
         return tenantMapper.toDomain(tenantUpdated)
     }
 
     fun delete(id: String) {
-        repository.findById(id).orElseThrow({
+        if (!repository.existsById(id))
             throw ResourceNotFoundException(RuntimeErrorEnum.ERR0012)
-        })
         repository.deleteById(id)
     }
 
     private fun checkUniqueFields(tenant: TenantDomain, id: String = "") {
-        repository.findByEmail(tenant.email).ifPresent {
-            if (it.email == tenant.email && it.id != id)
-                throw DuplicateResourceException(RuntimeErrorEnum.ERR0005)
-        }
-        repository.findByCpf(tenant.cpf).ifPresent {
-            if (it.cpf == tenant.cpf && it.id != id)
-                throw DuplicateResourceException(RuntimeErrorEnum.ERR0006)
-        }
-        repository.findByRg(tenant.rg).ifPresent {
-            if (it.rg == tenant.rg && it.id != id)
-                throw DuplicateResourceException(RuntimeErrorEnum.ERR0007)
-        }
-    }
+        if (repository.existsByEmailAndIdNot(tenant.email, id))
+            throw DuplicateResourceException(RuntimeErrorEnum.ERR0005)
 
-    private fun checkUniqueFields(tenant: SelfUpdateTenantDomain, id: String = "") {
-        repository.findByEmail(tenant.email).ifPresent {
-            if (it.email == tenant.email && it.id != id)
-                throw DuplicateResourceException(RuntimeErrorEnum.ERR0005)
-        }
-    }
+        if (repository.existsByCpfAndIdNot(tenant.cpf, id))
+            throw DuplicateResourceException(RuntimeErrorEnum.ERR0006)
 
-    private fun checkUniqueFields(tenant: LandLordUpdateTenantDomain, id: String = "") {
-        repository.findByEmail(tenant.email).ifPresent {
-            if (it.email == tenant.email && it.id != id)
-                throw DuplicateResourceException(RuntimeErrorEnum.ERR0005)
-        }
+        if (repository.existsByRgAndIdNot(tenant.rg, id))
+            throw DuplicateResourceException(RuntimeErrorEnum.ERR0007)
     }
 }

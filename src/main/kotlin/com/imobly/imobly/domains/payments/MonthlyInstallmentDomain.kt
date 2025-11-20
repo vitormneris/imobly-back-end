@@ -9,7 +9,7 @@ class MonthlyInstallmentDomain(
     var monthlyRent: Double = 0.0,
     var status: PaymentStatusEnum = PaymentStatusEnum.PENDING,
     var dueDate: LocalDate = LocalDate.of(2000, 1, 1),
-    var month: Month
+    var month: Month = Month.JANUARY
 ): Comparable<MonthlyInstallmentDomain> {
 
     override fun compareTo(other: MonthlyInstallmentDomain): Int = this.month.compareTo(other.month)
