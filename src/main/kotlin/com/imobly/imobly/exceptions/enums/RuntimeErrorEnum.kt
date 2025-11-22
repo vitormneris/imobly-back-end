@@ -19,5 +19,9 @@ enum class RuntimeErrorEnum(val code: String, val message: String) {
     ERR0016("RESOURCE_NOT_FOUND", "A locação solicitada não foi encontrada"),
     ERR0017("RESOURCE_NOT_FOUND", "O pagamento solicitado não foi encontrado"),
     ERR0018("AUTHENTICATION_FAILED", "O Token não foi encontrado"),
-    ERR0019("AUTHENTICATION_FAILED", "O E-mail ou a senha estão incorretos")
+    ERR0019("AUTHENTICATION_FAILED", "O E-mail ou a senha estão incorretos"),
+
+    ERR0020("OPERATION_NOT_ALLOWED", "Não é possível deletar, pois esta conta está vinculada a um contrato"),
+    ERR0021("OPERATION_NOT_ALLOWED", "Esta propriedade não lhe pertence")
+
 }
