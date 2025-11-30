@@ -61,6 +61,9 @@ class SecurityConfig(val jwtAuthFilter: JwtAuthFilter) {
                     .requestMatchers("/pagamentos/encontrarporlocacaoid/**").hasRole("TENANT")
                     .requestMatchers("/pagamentos/atualizarstatus/**").hasRole("LAND_LORD")
 
+                    .requestMatchers("/agendamentos/criar").hasRole("TENANT")
+                    .requestMatchers("/agendamentos/encontrartodos", "/agendamentos/deletar").hasRole("LAND_LORD")
+
                     .anyRequest().authenticated()
             }
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter::class.java)

@@ -11,11 +11,11 @@ data class LandLordDTO (
     val id: String?,
 
     @field:NotNull(message = "O campo nome é obrigatório")
-    @field:Size(min = 3, max = 40, message = "O campo nome deve ter entre 3  e 50 caracteres")
+    @field:Size(min = 3, max = 40, message = "O campo nome deve ter entre 3  e 40 caracteres")
     val firstName: String?,
 
     @field:NotNull(message = "O campo sobrenome é obrigatório")
-    @field:Size(min = 3, max = 40, message = "O campo sobrenome deve ter entre 3  e 50 caracteres")
+    @field:Size(min = 3, max = 40, message = "O campo sobrenome deve ter entre 3  e 40 caracteres")
     val lastName: String?,
 
     @field:NotNull(message = "O campo E-mail é obrigatório")

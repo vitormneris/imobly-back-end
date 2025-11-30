@@ -51,7 +51,7 @@ class LandLordService(
         if (!repository.existsById(id))
             throw ResourceNotFoundException(RuntimeErrorEnum.ERR0013)
 
-        if (leaseRepository.findAll().isNotEmpty())
+        if (leaseRepository.findAll().any { it.isEnabled })
             throw OperationNotAllowedException(RuntimeErrorEnum.ERR0027)
 
         repository.deleteById(id)

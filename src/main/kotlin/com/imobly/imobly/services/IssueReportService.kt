@@ -24,15 +24,28 @@ class IssueReportService(
 ) {
     fun findByTenantIdAndTitleOrMessage(tenantId: String, titleOrMessage: String): List<ReportDomain> {
         val list = mapper.toDomains(
-            reportRepository.findByTenant_IdAndTitleContainingIgnoreCaseOrTenant_IdAndMessageContainingIgnoreCase(tenantId, titleOrMessage, tenantId, titleOrMessage)
+            reportRepository.findByTenant_IdAndTitleContainingIgnoreCaseOrTenant_IdAndMessageContainingIgnoreCaseOrTenant_IdAndProperty_TitleContainingIgnoreCase(
+                tenantId,
+                titleOrMessage,
+                tenantId,
+                titleOrMessage,
+                tenantId,
+                titleOrMessage
+            )
         )
         Collections.sort(list)
         return list
     }
 
-    fun findAllByTitleOrMessage(titleOrMessage: String): List<ReportDomain> {
+    fun findAllByTitleOrMessageOrName(titleOrMessageOrName: String): List<ReportDomain> {
         val list = mapper.toDomains(
-            reportRepository.findByTitleContainingOrMessageContainingAllIgnoreCase(titleOrMessage, titleOrMessage)
+            reportRepository.findByTitleContainingOrMessageContainingOrProperty_TitleContainingOrTenant_FirstNameContainingOrTenant_LastNameContainingAllIgnoreCase(
+                titleOrMessageOrName,
+                titleOrMessageOrName,
+                titleOrMessageOrName,
+                titleOrMessageOrName,
+                titleOrMessageOrName
+            )
         )
         Collections.sort(list)
         return list

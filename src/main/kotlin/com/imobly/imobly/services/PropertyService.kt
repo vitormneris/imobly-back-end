@@ -4,8 +4,11 @@ import com.imobly.imobly.exceptions.ResourceNotFoundException
 import com.imobly.imobly.exceptions.enums.RuntimeErrorEnum
 import com.imobly.imobly.domains.PropertyDomain
 import com.imobly.imobly.exceptions.InvalidArgumentsException
+import com.imobly.imobly.exceptions.OperationNotAllowedException
+import com.imobly.imobly.persistences.appointment.repositories.AppointmentRepository
 import com.imobly.imobly.persistences.category.mappers.CategoryPersistenceMapper
 import com.imobly.imobly.persistences.category.repositories.CategoryRepository
+import com.imobly.imobly.persistences.issuereport.repositories.ReportRepository
 import com.imobly.imobly.persistences.lease.repositories.LeaseRepository
 import com.imobly.imobly.persistences.property.mappers.PropertyPersistenceMapper
 import com.imobly.imobly.persistences.property.repositories.PropertyRepository
@@ -19,6 +22,8 @@ class PropertyService(
     private val propertyRepository: PropertyRepository,
     private val categoryRepository: CategoryRepository,
     private val leaseRepository: LeaseRepository,
+    private val appointmentRepository: AppointmentRepository,
+    private val reportRepository: ReportRepository,
     private val uploadService: UploadService,
     private val mapper: PropertyPersistenceMapper
 ) {
@@ -76,6 +81,15 @@ class PropertyService(
     fun delete(id: String) {
         if (!propertyRepository.existsById(id))
             throw ResourceNotFoundException(RuntimeErrorEnum.ERR0011)
+
+        if (categoryRepository.findAll().any { it -> it.properties.any { it.id == id } })
+            throw OperationNotAllowedException(RuntimeErrorEnum.ERR0028)
+
+        if (leaseRepository.existsByProperty_Id(id))
+            throw OperationNotAllowedException(RuntimeErrorEnum.ERR0029)
+
+        appointmentRepository.deleteAllByProperty_Id(id)
+        reportRepository.deleteAllByProperty_Id(id)
 
         propertyRepository.deleteById(id)
     }

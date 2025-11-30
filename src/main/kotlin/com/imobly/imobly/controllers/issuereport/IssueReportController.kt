@@ -40,9 +40,9 @@ class IssueReportController(
     }
 
     @GetMapping("/encontrartodos")
-    fun findAllByTitleOrMessage(@RequestParam("titulooumensagem") titleOrMessage: String): ResponseEntity<List<ReportDTO>> =
+    fun findAllByTitleOrMessage(@RequestParam("titulooumensagemounome") titleOrMessageOrName: String): ResponseEntity<List<ReportDTO>> =
         ResponseEntity.ok().body(
-            mapper.toDTOs(service.findAllByTitleOrMessage(titleOrMessage))
+            mapper.toDTOs(service.findAllByTitleOrMessageOrName(titleOrMessageOrName))
         )
 
     @GetMapping("/encontrarporid/{id}")

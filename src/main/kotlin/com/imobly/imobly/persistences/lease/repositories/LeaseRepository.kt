@@ -19,4 +19,6 @@ interface LeaseRepository : JpaRepository<LeaseEntity, String> {
 
     fun existsByTenant_IdAndProperty_Id(tenantId: String, propertyId: String): Boolean
 
+    fun existsByProperty_Id(propertyId: String): Boolean
+
 }
