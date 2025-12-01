@@ -1,4 +1,4 @@
-package com.imobly.imobly.services
+package com.imobly.imobly.services.recoverypassword
 
 import com.imobly.imobly.domains.recoverypassword.RecoveryPasswordLandLordDomain
 import com.imobly.imobly.exceptions.OperationNotAllowedException
@@ -8,12 +8,13 @@ import com.imobly.imobly.persistences.landlord.mappers.LandLordPersistenceMapper
 import com.imobly.imobly.persistences.landlord.repositories.LandLordRepository
 import com.imobly.imobly.persistences.recoverypassword.mappers.RecoveryPasswordPersistenceMapper
 import com.imobly.imobly.persistences.recoverypassword.repositories.RecoveryPasswordLandLordRepository
+import com.imobly.imobly.services.EmailService
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 
 @Service
-class PasswordRecoveryService (
+class LandLordPasswordRecoveryService (
     private val landLordRepository: LandLordRepository,
     private val landLordMapper: LandLordPersistenceMapper,
     private val recoveryPasswordRepository: RecoveryPasswordLandLordRepository,

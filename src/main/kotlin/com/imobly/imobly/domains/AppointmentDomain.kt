@@ -1,12 +1,12 @@
 package com.imobly.imobly.domains
 
+import java.time.LocalDate
 import java.time.LocalDateTime
 
 class AppointmentDomain(
     var id: String? = null,
     var guestName: String,
-    var moment: LocalDateTime,
-    var guideName: String,
+    var moment: LocalDate,
     var telephone: String,
     var property: PropertyDomain
 ) : Comparable<AppointmentDomain> {

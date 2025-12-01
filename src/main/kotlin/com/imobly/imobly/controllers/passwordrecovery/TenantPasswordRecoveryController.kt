@@ -4,7 +4,7 @@ import com.imobly.imobly.controllers.passwordrecovery.dtos.EmailDTO
 import com.imobly.imobly.controllers.passwordrecovery.dtos.ResetPasswordDTO
 import com.imobly.imobly.exceptions.OperationNotAllowedException
 import com.imobly.imobly.exceptions.enums.RuntimeErrorEnum
-import com.imobly.imobly.services.PasswordRecoveryService
+import com.imobly.imobly.services.recoverypassword.TenantPasswordRecoveryService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/redefinirsenha")
-class PasswordRecoveryController (
-    private val service: PasswordRecoveryService
+@RequestMapping("/redefinirsenha/locatario")
+class TenantPasswordRecoveryController (
+    private val service: TenantPasswordRecoveryService
 ) {
     @PostMapping("/solicitarcodigo")
     fun requestCode(@RequestBody dto: EmailDTO): ResponseEntity<String> {

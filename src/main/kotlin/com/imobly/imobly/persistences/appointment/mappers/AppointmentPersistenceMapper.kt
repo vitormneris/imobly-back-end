@@ -27,7 +27,6 @@ class AppointmentPersistenceMapper {
             appointment.id,
             appointment.guestName,
             appointment.moment,
-            "",
             appointment.telephone,
             mapper.toDomain(appointment.property, CategoryPersistenceMapper())
         )

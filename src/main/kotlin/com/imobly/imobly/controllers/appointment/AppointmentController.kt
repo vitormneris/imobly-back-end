@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController
 class AppointmentController(
     val service: AppointmentService, val mapper: AppointmentWebMapper
 ) {
+
     @GetMapping("/encontrartodos")
     fun findAllByTitle(@RequestParam("titulo") title: String): ResponseEntity<List<AppointmentDTO>> =
         ResponseEntity.ok().body(
@@ -29,13 +30,15 @@ class AppointmentController(
         )
 
     @PostMapping("/criar")
-    fun insert(@Valid @RequestBody appointment: AppointmentDTO): ResponseEntity<AppointmentDTO> =
-        ResponseEntity.status(HttpStatus.CREATED).body(
+    fun insert(@Valid @RequestBody appointment: AppointmentDTO): ResponseEntity<AppointmentDTO> {
+        return ResponseEntity.status(HttpStatus.CREATED).body(
             mapper.toDTO(
-                service.insert(mapper.toDomain(appointment, PropertyWebMapper(AddressWebMapper()))),
-                PropertyWebMapper(AddressWebMapper())
+                service.insert(
+                    mapper.toDomain(appointment)
+                ), PropertyWebMapper(AddressWebMapper())
             )
         )
+    }
 
     @DeleteMapping("/deletar/{id}")
     fun delete(@PathVariable id: String): ResponseEntity<Void> {

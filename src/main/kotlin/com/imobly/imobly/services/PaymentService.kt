@@ -33,24 +33,11 @@ class PaymentService(
                 month = date.plusMonths(nInstallment).month
             ))
         }
+
         val payment = PaymentDomain(lease = lease, installments = installments)
         val paymentSaved = paymentRepository.save(mapper.toEntity(payment))
         return mapper.toDomain(paymentSaved)
     }
-
-//    fun updateInstallments(idPayment: String, ) {
-//        val payment = mapper.toDomain(paymentRepository.findById(idPayment).orElseThrow {
-//            throw ResourceNotFoundException(RuntimeErrorEnum.ERR0017)
-//        })
-//        payment.installments = payment.installments.map {
-//            if (it.status != PaymentStatusEnum.PAID && it.status != PaymentStatusEnum.OVERDUE) {
-//
-//
-//            }
-//            it
-//        }
-//        paymentRepository.save(mapper.toEntity(payment))
-//    }
 
     fun updateStatusInstallment(idPayment: String, idInstallment: String, statusInstallment: MonthlyInstallmentDomain) {
         val payment = mapper.toDomain(paymentRepository.findById(idPayment).orElseThrow {

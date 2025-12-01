@@ -7,12 +7,15 @@ import com.imobly.imobly.persistences.appointment.mappers.AppointmentPersistence
 import com.imobly.imobly.persistences.appointment.repositories.AppointmentRepository
 import com.imobly.imobly.persistences.property.mappers.AddressPersistenceMapper
 import com.imobly.imobly.persistences.property.mappers.PropertyPersistenceMapper
+import com.imobly.imobly.persistences.property.repositories.PropertyRepository
 import org.springframework.stereotype.Service
 import java.util.Collections
 
 @Service
 class AppointmentService(
-    private val repository: AppointmentRepository, private val mapper: AppointmentPersistenceMapper
+    private val repository: AppointmentRepository,
+    private val propertyRepository: PropertyRepository,
+    private val mapper: AppointmentPersistenceMapper
 ) {
     fun findAllByPropertyTitle(title: String): List<AppointmentDomain> {
         val list = mapper.toDomains(repository.findByProperty_TitleContainingAllIgnoreCase(title))
@@ -21,6 +24,10 @@ class AppointmentService(
     }
 
     fun insert(appointment: AppointmentDomain): AppointmentDomain {
+        if (!propertyRepository.existsById(appointment.property.id ?: "")) {
+            throw ResourceNotFoundException(RuntimeErrorEnum.ERR0011)
+        }
+
         val appointmentSaved = repository.save(
             mapper.toEntity(appointment, PropertyPersistenceMapper(AddressPersistenceMapper()))
         )
